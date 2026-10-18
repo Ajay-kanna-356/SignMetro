@@ -1,0 +1,27 @@
+{
+  "name": "signmeet-kiosk",
+  "version": "1.0.0",
+  "description": "SignMeet - Sign-First Railway Station Assistance System",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "keywords": [
+    "isl",
+    "sign-language",
+    "railway-kiosk",
+    "accessibility"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

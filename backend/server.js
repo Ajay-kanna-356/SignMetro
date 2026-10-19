@@ -68,8 +68,8 @@ app.get("/api/status", (req, res) => {
     service:          "SignMeet Backend",
     version:          "1.0.0",
     python_connected: wsManager.isPythonConnected(),
-    station:          "Chennai Egmore (MS)",
-    kiosk_id:         process.env.KIOSK_ID || "K-03",
+    station:          "Tambaram (TBM)",
+    kiosk_id:         process.env.KIOSK_ID || "TBM-01",
     timestamp:        new Date().toISOString(),
   });
 });

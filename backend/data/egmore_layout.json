@@ -1,73 +1,88 @@
 {
-  "station_code": "MS",
-  "station_name": "Chennai Egmore",
+  "station_code": "TBM",
+  "station_name": "Tambaram",
   "zone": "Southern Railway",
-  "disclaimer": "SIMULATED SCHEMATIC. Not an official or accurate station floor plan.",
-  "kiosk_id": "K-03",
-  "kiosk_location": "Main Concourse near Platform 1 Gate",
-  "kiosk_coordinates": [300, 200],
+  "kiosk_id": "TBM-01",
+  "kiosk_location": "West concourse (near GST Road entrance)",
+  "disclaimer": "Layout based on Tambaram station data pack (Oct 2026). Distances and positions are estimated. Lift/escalator statuses as reported 11 Oct 2026 — verify on site before use.",
+  "data_source": "layout_graph.json — Tambaram data pack",
   "canvas": {
-    "viewBox": "0 0 600 300",
-    "width": 600,
-    "height": 300
+    "viewBox": "0 0 700 360",
+    "width": 700,
+    "height": 360
   },
   "platforms": [
-    { "label": "P1–2",  "y": 14,  "height": 18 },
-    { "label": "P3–4",  "y": 38,  "height": 18 },
-    { "label": "P5–6",  "y": 62,  "height": 18 },
-    { "label": "P7–8",  "y": 86,  "height": 18 },
-    { "label": "P9–11", "y": 110, "height": 18 }
+    { "id": "PF_1",  "label": "Platform 1",  "group": "suburban", "y_svg": 56,  "height": 20 },
+    { "id": "PF_2",  "label": "Platform 2",  "group": "suburban", "y_svg": 82,  "height": 20 },
+    { "id": "PF_3",  "label": "Platform 3",  "group": "suburban", "y_svg": 108, "height": 20 },
+    { "id": "PF_4",  "label": "Platform 4",  "group": "suburban", "y_svg": 134, "height": 20 },
+    { "id": "PF_5",  "label": "Platform 5",  "group": "express",  "y_svg": 164, "height": 20 },
+    { "id": "PF_6",  "label": "Platform 6",  "group": "express",  "y_svg": 190, "height": 20 },
+    { "id": "PF_7",  "label": "Platform 7",  "group": "express",  "y_svg": 216, "height": 20 },
+    { "id": "PF_8",  "label": "Platform 8",  "group": "express",  "y_svg": 242, "height": 20 },
+    { "id": "PF_9",  "label": "Platform 9",  "group": "express",  "y_svg": 268, "height": 20 },
+    { "id": "PF_10", "label": "Platform 10", "group": "express",  "y_svg": 294, "height": 20 }
   ],
   "facilities": {
     "lift": {
-      "id":        "lift",
-      "name":      "Platform 1 Concourse Lift",
-      "symbol":    "L",
-      "step_free": true,
-      "marker":    [110, 180],
-      "path":      [[300, 200], [300, 165], [110, 165], [110, 180]],
+      "id":          "lift",
+      "name":        "Lifts — Old FOB (Platforms 1–10)",
+      "symbol":      "L",
+      "step_free":   true,
+      "status":      "pending_licence",
+      "status_note": "Platform lifts awaiting licence/installation (Oct 2026). West-entry lifts licensed but approach incomplete.",
+      "marker":      [360, 175],
+      "path":        [[140, 310], [140, 175], [360, 175]],
       "directions_en": [
-        "Walk straight to the concourse crossing",
-        "Turn left along the blue floor line",
-        "Lift is beside the Platform 1 gate"
+        "From kiosk, walk along the west concourse toward the overbridge stairs",
+        "Follow signs to the Old Foot Over Bridge (FOB)",
+        "Lifts are at each platform pair — check status board before use",
+        "West-entry lifts (GST Road side) are licensed but approach paths are still being completed"
       ]
     },
     "escalator": {
-      "id":        "escalator",
-      "name":      "Platform 9–11 Escalator",
-      "symbol":    "E",
-      "step_free": false,
-      "marker":    [490, 180],
-      "path":      [[300, 200], [300, 165], [490, 165], [490, 180]],
+      "id":          "escalator",
+      "name":        "Escalators — Old FOB (West & East entrances)",
+      "symbol":      "E",
+      "step_free":   false,
+      "status":      "open",
+      "status_note": "Old FOB escalators at west and east entrances are open. New FOB escalators under construction.",
+      "marker":      [360, 80],
+      "path":        [[140, 310], [140, 80], [360, 80]],
       "directions_en": [
-        "Walk straight to the concourse crossing",
-        "Turn right along the blue floor line",
-        "Escalator is at the Platform 9–11 side"
+        "From kiosk, walk toward the Old Foot Over Bridge",
+        "Escalators are at the west entrance (GST Road) and east entrance (Velachery Road) ends of the old FOB",
+        "New FOB escalators at platform level are under construction (expected Dec 2026)"
       ]
     },
     "washroom": {
-      "id":        "washroom",
-      "name":      "East Wing Washroom",
-      "symbol":    "W",
-      "step_free": true,
-      "marker":    [540, 230],
-      "path":      [[300, 200], [300, 215], [540, 215], [540, 230]],
+      "id":          "washroom",
+      "name":        "Washrooms (West & East concourse)",
+      "symbol":      "W",
+      "step_free":   true,
+      "status":      "open",
+      "status_note": "Positions are estimated — verify on site.",
+      "marker":      [90, 310],
+      "path":        [[140, 310], [90, 310]],
       "directions_en": [
-        "Walk straight, then turn right",
-        "Follow the floor signs to the east corner",
-        "Washroom is on your right"
+        "West washroom: near the west concourse (GST Road side)",
+        "East washroom: near the east entrance (Velachery Road side)",
+        "Ask station staff if positions are unclear"
       ]
     },
     "exit": {
-      "id":        "exit",
-      "name":      "Main Entrance / Exit",
-      "symbol":    "X",
-      "step_free": true,
-      "marker":    [300, 262],
-      "path":      [[300, 200], [300, 262]],
+      "id":          "exit",
+      "name":        "Main Entrance / Exit (West — GST Road)",
+      "symbol":      "X",
+      "step_free":   true,
+      "status":      "open",
+      "status_note": "",
+      "marker":      [140, 340],
+      "path":        [[140, 310], [140, 340]],
       "directions_en": [
-        "Walk straight ahead",
-        "Main entrance is directly in front of you"
+        "Walk straight through the west concourse",
+        "Main entrance / exit is on GST Road",
+        "East entrance: on Velachery Road opposite MCC College"
       ]
     }
   }

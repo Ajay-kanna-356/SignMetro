@@ -64,7 +64,7 @@ _event_queue: asyncio.Queue | None = None
 # ====================================================================
 
 import socket
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 
 class _MJPEGHandler(BaseHTTPRequestHandler):
@@ -116,7 +116,7 @@ class _MJPEGHandler(BaseHTTPRequestHandler):
 
 
 def _run_mjpeg_server():
-    server = HTTPServer((MJPEG_HOST, MJPEG_PORT), _MJPEGHandler)
+    server = ThreadingHTTPServer((MJPEG_HOST, MJPEG_PORT), _MJPEGHandler)
     print(f"[MJPEG] Preview stream → http://localhost:{MJPEG_PORT}/video_feed")
     server.serve_forever()
 

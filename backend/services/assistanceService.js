@@ -22,18 +22,18 @@ const assistanceService = {
    * @param {{ category: string, terminal_id?: string, details?: object }} params
    * @returns {{ success: boolean, request_id?: string, error?: string, record?: object }}
    */
-  create({ category, terminal_id = "KIOSK-K03", details = {} }) {
+  create({ category, terminal_id = "KIOSK-TBM01", details = {} }) {
     if (!VALID_CATEGORIES.includes(category)) {
       return { success: false, error: `Unknown category: ${category}` };
     }
 
     const record = {
-      request_id:   `REQ-EGM-${Date.now()}-${randomUUID().slice(0, 6).toUpperCase()}`,
+      request_id:   `REQ-TBM-${Date.now()}-${randomUUID().slice(0, 6).toUpperCase()}`,
       category,
       terminal_id,
-      station_code: "MS",
-      station_name: "Chennai Egmore",
-      location:     "Main Concourse · Kiosk K-03",
+      station_code: "TBM",
+      station_name: "Tambaram",
+      location:     "West Concourse · Kiosk TBM-01",
       details,
       status:       "received",          // received | acknowledged | resolved
       created_at:   new Date().toISOString(),

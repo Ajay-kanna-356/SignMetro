@@ -1,0 +1,478 @@
+/* ==========================================================================
+   SignMeet Kiosk — Main Stylesheet
+   Ported from the original prototype with comments added for maintainability.
+   ========================================================================== */
+
+/* ---- Design tokens (light theme) ---- */
+:root {
+  --bg:   #f6f8fb;
+  --fg:   #2a3a4e;
+  --cd:   #ffffff;
+  --ac:   #3e6e99;
+  --soft: #eaf1f7;
+  --rd:   #c26b6b;
+  --ok:   #4a8566;
+  --wr:   #a8773a;
+  --mu:   #66768a;
+  --bd:   #dde5ed;
+
+  box-sizing: border-box;
+  padding-top:    env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ---- Indian tricolour accent bar ---- */
+body::before {
+  content: "";
+  display: block;
+  height: 5px;
+  background: linear-gradient(90deg, #e9b27a 0 33.3%, #fff 33.3% 66.6%, #7db591 66.6%);
+  border-bottom: 1px solid var(--bd);
+}
+
+/* ---- Reset & base ---- */
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 18px / 1.45
+    "Noto Sans", "Noto Sans Tamil", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ---- App container ---- */
+#app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 0 200px;   /* space for fixed cam widget */
+}
+
+/* ---- Typography ---- */
+h1 { font-size: 1.5em; margin: 0.4em 0; }
+h2 { margin: 0.3em 0; }
+small, .mu { color: var(--mu); }
+
+/* ---- Layout helpers ---- */
+.hd, .nav, .row, .tabs, .r {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ---- Header bar ---- */
+.hd {
+  justify-content: space-between;
+  border-radius: 0 0 22px 22px;
+  border: 0;
+  border-bottom: 1px solid var(--bd);
+  background: var(--cd);
+  color: var(--fg);
+  padding: 12px 18px;
+  box-shadow: 0 1px 3px #2a3a4e10;
+}
+.hd b { font-weight: 600; letter-spacing: 0.2px; }
+.hd .cam { color: var(--mu); }
+.hd .sos {
+  background: #f8e8e8;
+  color: #97403f;
+  border: 1px solid #ebcaca;
+  font-weight: 600;
+}
+
+/* ---- Navigation bar ---- */
+.nav { margin: 8px 0; margin-left: 16px; margin-right: 16px; }
+
+/* ---- Chip / button styles ---- */
+button, input, select { font: inherit; color: inherit; }
+
+.ch, .btn {
+  border: 1px solid var(--ac);
+  background: var(--cd);
+  border-radius: 14px;
+  padding: 10px 18px;
+  cursor: pointer;
+  min-height: 44px;
+}
+.ch {
+  border-color: var(--bd);
+}
+.ch.on {
+  background: var(--soft);
+  color: var(--fg);
+  border-color: var(--ac);
+}
+.btn {
+  background: var(--ac);
+  color: #fff;
+}
+
+.sos {
+  background: var(--rd);
+  color: #fff;
+  border: 0;
+  border-radius: 14px;
+  padding: 10px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+:focus-visible { outline: 3px solid var(--ac); outline-offset: 3px; }
+
+/* ---- Tile grid ---- */
+.tl, .g2 {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* ---- Tile ---- */
+.t {
+  background: var(--cd);
+  border: 1px solid var(--bd);
+  border-radius: 22px;
+  padding: 22px;
+  font-size: 1.3em;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  min-height: 130px;
+  box-shadow: 0 1px 3px #2a3a4e12;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.t:hover { box-shadow: 0 6px 18px #2a3a4e1a; }
+.t:active { transform: scale(0.985); }
+.t span { display: flex; }
+.t svg { width: 44px; height: 44px; color: var(--ac); }
+.t small { font-size: 0.65em; }
+.t.rd { border-color: #ebcaca; background: #fdf7f7; }
+.t.rd svg { color: var(--rd); }
+
+/* ---- Card ---- */
+.card {
+  background: var(--cd);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  padding: 14px;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+
+/* ---- Form inputs ---- */
+input[type="text"],
+input:not([type]),
+input[type="tel"],
+select {
+  border: 2px solid var(--bd);
+  background: var(--cd);
+  border-radius: 14px;
+  padding: 10px;
+  width: 100%;
+  max-width: 520px;
+  margin: 4px 0;
+}
+
+/* ---- Table ---- */
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--soft); }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--bd); }
+tr[data-a] { cursor: pointer; }
+tr[data-a]:hover { background: var(--soft); }
+
+/* ---- Status colours ---- */
+.ok   { color: var(--ok); }
+.warn { color: var(--wr); font-weight: 700; }
+.er   { color: var(--rd); }
+.big  { font-size: 2em; font-weight: 800; }
+
+/* ---- Coach list ---- */
+.co { display: flex; gap: 4px; flex-wrap: wrap; }
+.co i {
+  border: 1px solid var(--bd);
+  background: var(--soft);
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-style: normal;
+  font-size: 0.8em;
+}
+
+/* ---- Tracker steps ---- */
+.tk { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+.st {
+  flex: 1;
+  min-width: 150px;
+  border: 2px solid var(--bd);
+  border-radius: 16px;
+  padding: 10px;
+  color: var(--mu);
+}
+.st.on { border-color: var(--ok); color: var(--fg); }
+.st b {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bd);
+  text-align: center;
+  margin-right: 6px;
+}
+.st.on b { background: var(--ok); color: #fff; }
+
+/* ---- Warning note ---- */
+.wn { background: var(--soft); padding: 8px 12px; border-radius: 16px; }
+
+/* ---- Sign simulator bar ---- */
+.sim {
+  margin: 14px 16px 0;
+  border: 2px dashed var(--bd);
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sim button {
+  border: 1px solid var(--bd);
+  background: var(--cd);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* ---- Idle screen ---- */
+.idle {
+  text-align: center;
+  padding: 60px 10px;
+  cursor: pointer;
+  background: var(--cd);
+  border-radius: 22px;
+  border: 1px solid var(--bd);
+}
+.hand { color: var(--ac); }
+.hand svg { width: 72px; height: 72px; }
+
+/* ---- Modal overlay ---- */
+.mod {
+  position: fixed;
+  inset: 0;
+  background: #000a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+  padding: 16px;
+}
+.mod > div {
+  background: var(--cd);
+  border-radius: 22px;
+  padding: 22px;
+  max-width: 440px;
+  text-align: center;
+}
+
+/* ---- LED-style announcement board ---- */
+.board {
+  background: var(--soft) !important;
+  color: var(--fg) !important;
+  font-family: inherit !important;
+  border-left: 4px solid var(--ac);
+  border-radius: 16px;
+  padding: 10px;
+}
+
+label { display: inline-flex; gap: 6px; align-items: center; }
+
+/* ---- Station map ---- */
+.mp { background: var(--soft); border-radius: 16px; }
+
+/* ---- Main content padding ---- */
+main, .nav, .sim { margin-left: 16px; margin-right: 16px; }
+
+/* ==========================================================================
+   Floating Camera & Live HUD Container
+   ========================================================================== */
+#cam-container {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 99;
+  pointer-events: none;
+}
+
+/* ---- Live Recognition HUD Badge (Above Camera) ---- */
+.cam-hud {
+  pointer-events: auto;
+  background: rgba(18, 26, 36, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  border-radius: 14px;
+  padding: 8px 12px;
+  width: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.hud-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.hud-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+  flex-shrink: 0;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.hud-status-dot.active {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981bb;
+}
+
+.hud-sign-label {
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.5px;
+  color: #f8fafc;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-pct-badge {
+  font-weight: 800;
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #38bdf8;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.2s, color 0.2s;
+}
+.hud-pct-badge.qualified {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.hud-progress-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.hud-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  border-radius: 999px;
+  transition: width 0.15s ease, background 0.2s ease;
+}
+.hud-progress-fill.qualified {
+  background: linear-gradient(90deg, #34d399, #10b981);
+}
+
+.hud-sub-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+#hud-alts {
+  color: #cbd5e1;
+  font-size: 10px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+
+/* Floating Camera PiP widget */
+#cam {
+  pointer-events: auto;
+  position: relative;
+  width: 200px;
+  height: 150px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--soft);
+  border: 1px solid var(--bd);
+  box-shadow: 0 6px 20px #2a3a4e22;
+  transition: border-color 0.3s;
+}
+
+/* Colour ring reflects recognition state */
+#cam.state-confirming { border-color: #c8960a; border-width: 2px; }
+#cam.state-accepted   { border-color: var(--ok); border-width: 3px; }
+#cam.state-error      { border-color: var(--rd); border-width: 2px; }
+
+#cam img,
+#cam video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#cam .ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  color: var(--mu);
+  padding: 8px;
+}
+
+#cam .lb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffffe0;
+  font-size: 11px;
+  padding: 4px 8px;
+  color: var(--mu);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#cam .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mu);   /* grey until Python connects */
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+#cam.python-connected .dot { background: var(--ok); }
+#cam.camera-error     .dot { background: var(--rd); }

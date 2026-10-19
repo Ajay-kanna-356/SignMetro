@@ -1,0 +1,74 @@
+{
+  "station_code": "MS",
+  "station_name": "Chennai Egmore",
+  "zone": "Southern Railway",
+  "disclaimer": "SIMULATED SCHEMATIC. Not an official or accurate station floor plan.",
+  "kiosk_id": "K-03",
+  "kiosk_location": "Main Concourse near Platform 1 Gate",
+  "kiosk_coordinates": [300, 200],
+  "canvas": {
+    "viewBox": "0 0 600 300",
+    "width": 600,
+    "height": 300
+  },
+  "platforms": [
+    { "label": "P1–2",  "y": 14,  "height": 18 },
+    { "label": "P3–4",  "y": 38,  "height": 18 },
+    { "label": "P5–6",  "y": 62,  "height": 18 },
+    { "label": "P7–8",  "y": 86,  "height": 18 },
+    { "label": "P9–11", "y": 110, "height": 18 }
+  ],
+  "facilities": {
+    "lift": {
+      "id":        "lift",
+      "name":      "Platform 1 Concourse Lift",
+      "symbol":    "L",
+      "step_free": true,
+      "marker":    [110, 180],
+      "path":      [[300, 200], [300, 165], [110, 165], [110, 180]],
+      "directions_en": [
+        "Walk straight to the concourse crossing",
+        "Turn left along the blue floor line",
+        "Lift is beside the Platform 1 gate"
+      ]
+    },
+    "escalator": {
+      "id":        "escalator",
+      "name":      "Platform 9–11 Escalator",
+      "symbol":    "E",
+      "step_free": false,
+      "marker":    [490, 180],
+      "path":      [[300, 200], [300, 165], [490, 165], [490, 180]],
+      "directions_en": [
+        "Walk straight to the concourse crossing",
+        "Turn right along the blue floor line",
+        "Escalator is at the Platform 9–11 side"
+      ]
+    },
+    "washroom": {
+      "id":        "washroom",
+      "name":      "East Wing Washroom",
+      "symbol":    "W",
+      "step_free": true,
+      "marker":    [540, 230],
+      "path":      [[300, 200], [300, 215], [540, 215], [540, 230]],
+      "directions_en": [
+        "Walk straight, then turn right",
+        "Follow the floor signs to the east corner",
+        "Washroom is on your right"
+      ]
+    },
+    "exit": {
+      "id":        "exit",
+      "name":      "Main Entrance / Exit",
+      "symbol":    "X",
+      "step_free": true,
+      "marker":    [300, 262],
+      "path":      [[300, 200], [300, 262]],
+      "directions_en": [
+        "Walk straight ahead",
+        "Main entrance is directly in front of you"
+      ]
+    }
+  }
+}

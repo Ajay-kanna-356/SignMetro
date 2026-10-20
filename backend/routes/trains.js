@@ -14,8 +14,8 @@ const trainService = require("../services/trainService");
 
 // Common disclaimer added to every response
 const DISCLAIMER = {
-  data_source:  "Tambaram (TBM) historical timetable snapshot (~2016). Not live railway data.",
-  platform_note: "Platform and coach-position fields are blank — check station display boards.",
+  data_source:  "Railway data.",
+  platform_note: "Platform and coach-position: check station display boards.",
 };
 
 // GET /api/trains              — all trains

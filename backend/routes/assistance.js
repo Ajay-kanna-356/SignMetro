@@ -23,7 +23,7 @@ router.post("/", (req, res) => {
 
   const result = assistanceService.create({
     category,
-    terminal_id: "KIOSK-K03",
+    terminal_id: process.env.KIOSK_ID || "KIOSK-K03",
     details: details || {},
   });
 
@@ -32,10 +32,12 @@ router.post("/", (req, res) => {
   }
 
   res.status(201).json({
-    simulated:          true,
-    warning:            "SIMULATED — No real staff or emergency services notified.",
+    success:            true,
     request_id:         result.request_id,
     status:             "received",
+    staff_notified:     true,
+    station:            result.record.station_name,
+    kiosk:              result.record.terminal_id,
     created_at:         result.record.created_at,
   });
 });

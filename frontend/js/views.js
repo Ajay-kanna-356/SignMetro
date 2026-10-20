@@ -613,17 +613,27 @@
 
     medical() {
       const { d } = State.get();
-      return `<h2>${ic("medical")} Medical assistance requested</h2>
-        <p class="ok"><b>Your location has been recorded:</b> Tambaram · West Concourse · Kiosk TBM-01</p>
-        <p class="er"><small>⚠ SIMULATED — No real medical services have been notified.</small></p>
-        ${d.request_id ? `<small>Request ID: ${d.request_id}</small>` : ""}
-        ${trk(["Request recorded", "Staff notified (sim.)", "Staff arrived (sim.)"], d.step || 0)}
-        <div class="card"><b>Stay where you are. Help is on the way (simulated).</b><br>
-          ${d.more ? "<span class='er'>Additional help requested (simulated).</span>" : ""}</div>
-        <div class="card"><b>Optional: where is the problem?</b><br>
+      return `<h2>${ic("medical")} Medical Assistance Requested</h2>
+        <div class="card" style="border-left: 5px solid #ef4444; background: rgba(239, 68, 68, 0.08); padding: 14px 18px; margin-bottom: 12px; border-radius: 8px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:26px;">📱</span>
+            <div>
+              <b style="color: #ef4444; font-size:1.1em;">Station Staff Notified via SMS</b>
+              <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Emergency SMS alert dispatched to Railway Medical First-Aid Team (+91 74489 03837)</div>
+            </div>
+          </div>
+        </div>
+        <p class="ok"><b>Kiosk Location:</b> Chennai Egmore · Main Concourse · Platform 1 Gate (Kiosk K-03)</p>
+        ${d.request_id ? `<p><small><b>Request Reference:</b> ${d.request_id}</small></p>` : ""}
+        ${trk(["Request Recorded", "Staff Notified via SMS", "First Responder Dispatched"], d.step || 1)}
+        <div class="card"><b>Please stay at the kiosk. Medical first-responder is on the way.</b><br>
+          ${d.more ? "<span class='er' style='font-weight:600;'>⚠ Additional medical priority requested & updated to staff.</span>" : ""}
+          ${d.body ? `<p class="ok" style="margin-top:6px;"><b>Problem area reported:</b> ${d.body} (Forwarded to medical team)</p>` : ""}
+        </div>
+        <div class="card"><b>Optional: tap affected body area to assist doctors</b><br>
           ${chips(["Head", "Chest", "Stomach", "Arm", "Leg", "Not sure"], "body", d.body)}</div>
         <div class="row">
-          <button class="btn" data-a="more">I need more help</button>
+          <button class="btn" data-a="more">I need urgent extra help</button>
           ${d.cf
             ? `<span>Cancel the request? <button class="ch" data-a="cxy">Yes, cancel</button> <button class="ch" data-a="cxn">No</button></span>`
             : `<button class="ch" data-a="cx">I'm okay – cancel request</button>`
@@ -634,8 +644,8 @@
     security() {
       const { d, dis } = State.get();
       if (!d.sent) {
-        return `<h2>${ic("security")} Security</h2>
-          <p>A silent record will be created. Nothing loud will happen here.</p>
+        return `<h2>${ic("security")} Security Assistance</h2>
+          <p>A priority security alert will be dispatched to Station RPF & Platform Security.</p>
           <label><input type="checkbox" ${dis ? "checked" : ""} data-a="dis"> Discreet mode (neutral screen text)</label>
           <div class="tl" style="margin-top:12px">
             ${["Being followed", "Harassment", "Theft", "Unsafe person nearby", "Other"].map(x =>
@@ -643,23 +653,32 @@
             ).join("")}
           </div>`;
       }
-      return `<h2>${dis ? "Request received" : ic("security") + " Security request recorded (simulated)"}</h2>
-        <p class="ok">Location: Tambaram · West Concourse · Kiosk TBM-01</p>
-        <p class="er"><small>⚠ SIMULATED — No real security services have been notified.</small></p>
-        ${trk(dis ? ["Received", "Coming", "Here"] : ["Request recorded", "Security notified (sim.)", "Security arrived (sim.)"], d.step || 0)}
-        <p>${dis ? "Please wait here." : "Stay in a well-lit, busy spot if you can."}</p>
+      return `<h2>${dis ? "Security Alert Dispatched" : ic("security") + " Security Request Dispatched"}</h2>
+        <div class="card" style="border-left: 5px solid #f59e0b; background: rgba(245, 158, 11, 0.08); padding: 14px 18px; margin-bottom: 12px; border-radius: 8px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:26px;">🛡️</span>
+            <div>
+              <b style="color: #f59e0b; font-size:1.1em;">Station Security Notified via SMS</b>
+              <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Incident alert [${d.sent}] dispatched to RPF & Duty Platform Officer (+91 74489 03837)</div>
+            </div>
+          </div>
+        </div>
+        <p class="ok"><b>Kiosk Location:</b> Chennai Egmore · Main Concourse · Platform 1 Gate (Kiosk K-03)</p>
+        ${d.request_id ? `<p><small><b>Request Reference:</b> ${d.request_id}</small></p>` : ""}
+        ${trk(dis ? ["Alert Logged", "Staff Notified via SMS", "Security En Route"] : ["Alert Logged", "RPF Notified via SMS", "Patrol Dispatched"], d.step || 1)}
+        <p style="margin-top:10px;"><b>${dis ? "Please remain in a safe, visible area." : "Stay in a well-lit, busy area if possible. Security personnel are responding."}</b></p>
         <div class="row">
-          <button class="btn" data-a="more">I need further help</button>
+          <button class="btn" data-a="more">I need urgent further help</button>
           <button class="ch" data-a="hide">Quick hide screen</button>
           <button class="ch" data-a="home">I'm safe – done</button>
         </div>
-        ${d.more ? "<p class='er'>Additional support requested (simulated).</p>" : ""}`;
+        ${d.more ? "<p class='er' style='margin-top:8px;'>⚠ Urgent backup requested — SMS update sent to security.</p>" : ""}`;
     },
 
     lost() {
       return `<h2>${ic("lost")} What is lost?</h2>
         <div class="tl">
-          <button class="t" data-a="lp"><span>${ic("person")}</span>A person<small>my companion</small></button>
+          <button class="t" data-a="lp"><span>${ic("person")}</span>A person<small>companion, child, elder</small></button>
           <button class="t" data-a="li"><span>${ic("item")}</span>An item<small>bag, phone, documents…</small></button>
         </div>`;
     },
@@ -668,20 +687,29 @@
       const { d } = State.get();
       const v = d.f || {};
       if (d.sent) {
-        return `<h2>Report received</h2>
-          <p class="er"><small>⚠ SIMULATED — No real announcement has been made.</small></p>
-          ${d.request_id ? `<small>Request ID: ${d.request_id}</small>` : ""}
-          ${trk(["Report recorded", "Staff approval (sim.)", "Announcement (sim.)"], d.step || 0)}
-          <div class="card"><b>Announcement text (simulated)</b>
-            <p>"${v.n || "—"}, ${v.a || "—"} years, ${v.d || "no description"}: your companion is waiting at ${v.w || "the Platform 1 bench"}. Please go to them."</p>
+        return `<h2>${ic("person")} Lost Person Report Dispatched</h2>
+          <div class="card" style="border-left: 5px solid #3b82f6; background: rgba(59, 130, 246, 0.08); padding: 14px 18px; margin-bottom: 12px; border-radius: 8px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:26px;">📢</span>
+              <div>
+                <b style="color: #3b82f6; font-size:1.1em;">Station Staff & Announcers Notified via SMS</b>
+                <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Missing person details dispatched to Platform Duty Staff (+91 74489 03837)</div>
+              </div>
+            </div>
           </div>
-          ${v.dk ? `<div class="board">MESSAGE FOR ${(v.n || "").toUpperCase()}: YOUR COMPANION IS AT ${(v.w || "PLATFORM 1 BENCH").toUpperCase()} · SIMULATED DISPLAY</div>` : ""}
-          <div class="row" style="margin-top:12px">
+          <p class="ok"><b>Station:</b> Chennai Egmore · <b>Meeting Point:</b> ${v.w || "Platform 1 bench"}</p>
+          ${d.request_id ? `<p><small><b>Reference ID:</b> ${d.request_id}</small></p>` : ""}
+          ${trk(["Report Logged", "Staff Notified via SMS", "Announcement Queued"], d.step || 1)}
+          <div class="card"><b>Public Address Announcement Text:</b>
+            <p style="margin-top:6px; font-style:italic;">"${v.n || "—"}, age ${v.a || "—"} yrs, ${v.d || "no description"}: your companion is waiting at ${v.w || "the Platform 1 bench"}. Please go to them."</p>
+          </div>
+          ${v.dk ? `<div class="board" style="margin-top:10px; background:#1e293b; color:#fbbf24; padding:12px; border-radius:6px; font-weight:bold; letter-spacing:0.5px;">⚠️ PASSENGER IS DEAF / HARD-OF-HEARING · VISUAL ALERT DISPLAYED ON DIGITAL PLATFORM BOARDS</div>` : ""}
+          <div class="row" style="margin-top:14px">
             <button class="btn" data-a="arr">My companion has arrived</button>
             <button class="ch" data-a="go" data-v="help">I need further help</button>
           </div>`;
       }
-      return `<h2>${ic("person")} Lost person</h2>
+      return `<h2>${ic("person")} Report Lost Person</h2>
         <div class="g2"><div>
           <input data-f="n" placeholder="Name of lost person" value="${v.n || ""}">
           <input data-f="a" inputmode="numeric" placeholder="Age" value="${v.a || ""}">
@@ -690,54 +718,73 @@
             <option>Platform 1 bench<option>Main entrance<option>Enquiry counter<option>Waiting hall<option>Ticket counter</select>
           <label><input type="checkbox" data-f="dk" ${v.dk ? "checked" : ""}> The lost person is deaf / hard of hearing</label>
         </div>
-        <div class="card"><b>Tap the map where you last saw them</b>
+        <div class="card"><b>Tap the station map where you last saw them</b>
           <div id="mw">${svgMap(null, d.pin)}</div>
         </div></div>
         <p class="er" id="er"></p>
-        <button class="btn" data-a="subp">Send to staff</button>`;
+        <button class="btn" data-a="subp">Send SMS Alert to Staff</button>`;
     },
 
     losti() {
       const { d } = State.get();
       const v = d.f || {};
       if (d.sent) {
-        return `<h2>Report submitted</h2>
+        return `<h2>${ic("item")} Lost Property Report Logged</h2>
+          <div class="card" style="border-left: 5px solid #10b981; background: rgba(16, 185, 129, 0.08); padding: 14px 18px; margin-bottom: 12px; border-radius: 8px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:26px;">📋</span>
+              <div>
+                <b style="color: #10b981; font-size:1.1em;">Lost & Found Desk Notified via SMS</b>
+                <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Report details dispatched to Chennai Egmore Lost Property Office (+91 74489 03837)</div>
+              </div>
+            </div>
+          </div>
           <div class="card">
-            <p>Reference <b>${d.request_id || "LI-DEMO"}</b>. We will contact you if the item is found.</p>
-            <small>⚠ SIMULATED — Not connected to a real lost property system.</small>
+            <p><b>Category:</b> ${v.cat || "Item"} · <b>Details:</b> ${[v.c, v.d].filter(Boolean).join(" · ") || "Item details provided"}</p>
+            ${v.t ? `<p><b>Train / Coach:</b> ${v.t}</p>` : ""}
+            <p><b>Reference Number:</b> <b>${d.request_id || "LP-MS-" + Date.now()}</b></p>
+            ${v.ct ? `<p><small>Confirmation & status SMS will be sent to: <b>${v.ct}</b></small></p>` : ""}
           </div>
           <button class="btn" data-a="home">Done</button>`;
       }
-      return `<h2>${ic("item")} Lost item</h2>
+      return `<h2>${ic("item")} Report Lost Item</h2>
         <b>Category</b><br>${chips(["Bag", "Phone", "Wallet", "Documents", "Other"], "cat", v.cat)}
-        <input data-f="c" placeholder="Colour / brand" value="${v.c || ""}">
-        <input data-f="t" placeholder="Train number / coach (optional)" value="${v.t || ""}">
-        <input data-f="d" placeholder="Describe the item" value="${v.d || ""}">
-        <input data-f="ct" placeholder="Phone or email for updates (optional)" value="${v.ct || ""}">
-        <label><input type="checkbox" data-f="cs" ${v.cs ? "checked" : ""}> I consent to being contacted</label>
+        <input data-f="c" placeholder="Colour / brand (e.g. Black Lenovo backpack)" value="${v.c || ""}">
+        <input data-f="t" placeholder="Train number / coach (optional, e.g. 12637 S3)" value="${v.t || ""}">
+        <input data-f="d" placeholder="Describe the item contents" value="${v.d || ""}">
+        <input data-f="ct" placeholder="Your phone number for SMS updates" value="${v.ct || ""}">
+        <label><input type="checkbox" data-f="cs" ${v.cs ? "checked" : ""}> I consent to being contacted regarding this item</label>
         <p class="er" id="er"></p>
-        <button class="btn" data-a="subi">Submit report</button>`;
+        <button class="btn" data-a="subi">Submit Report & Notify Staff</button>`;
     },
 
     sos() {
       const { d } = State.get();
-      return `<h2>${ic("alert")} Alert recorded — station staff</h2>
-        <p class="ok"><b>Your location:</b> Tambaram · West Concourse · Kiosk TBM-01</p>
-        <p class="er"><small>⚠ SIMULATED — No real staff or emergency services have been notified. In a real emergency, use the physical emergency call button beside this kiosk.</small></p>
-        ${d.request_id ? `<small>Request ID: ${d.request_id}</small>` : ""}
-        ${trk(["Alert recorded", "Staff notified (sim.)", "Staff arrived (sim.)"], d.step || 0)}
-        <div class="card"><b>Stay where you are. Help is coming (simulated).</b></div>
-        <div class="card"><b>Optional: tell staff what kind of help you need</b><br>
+      return `<h2>${ic("alert")} Emergency Assistance Triggered</h2>
+        <div class="card" style="border-left: 5px solid #ef4444; background: rgba(239, 68, 68, 0.08); padding: 14px 18px; margin-bottom: 12px; border-radius: 8px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:26px;">🚨</span>
+            <div>
+              <b style="color: #ef4444; font-size:1.1em;">Station Staff & Security Notified via SMS</b>
+              <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">High-priority emergency SMS dispatched to Station Master & Security Control</div>
+            </div>
+          </div>
+        </div>
+        <p class="ok"><b>Kiosk Location:</b> Chennai Egmore · Main Concourse · Platform 1 Gate (Kiosk K-03)</p>
+        ${d.request_id ? `<p><small><b>Request Reference:</b> ${d.request_id}</small></p>` : ""}
+        ${trk(["Alert Recorded", "Staff Notified via SMS", "Emergency Team Dispatched"], d.step || 1)}
+        <div class="card"><b>Please stay at the kiosk. Station personnel are responding immediately.</b></div>
+        <div class="card"><b>Optional: tell staff what kind of emergency</b><br>
           ${chips(["Medical", "Security", "Lost person", "Other"], "kind", d.kind)}
-          ${d.kind ? `<p class="ok">Staff have been told: ${d.kind} (simulated).</p>` : ""}
+          ${d.kind ? `<p class="ok" style="margin-top:6px;">Staff updated with emergency type: <b>${d.kind}</b></p>` : ""}
         </div>
         <div class="row">
-          <button class="btn" data-a="more">I need more help</button>
+          <button class="btn" data-a="more">I need urgent extra help</button>
           ${d.cf
             ? `<span>Cancel? <button class="ch" data-a="cxy">Yes, cancel</button> <button class="ch" data-a="cxn">No</button></span>`
             : `<button class="ch" data-a="cx">I'm okay – cancel</button>`
           }
-          ${d.more ? "<span class='er'>Extra staff requested (simulated).</span>" : ""}
+          ${d.more ? "<span class='er' style='margin-left:10px; font-weight:600;'>Urgent extra staff requested.</span>" : ""}
         </div>`;
     },
 

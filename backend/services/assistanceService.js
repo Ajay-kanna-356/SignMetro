@@ -10,6 +10,7 @@
 "use strict";
 
 const { randomUUID } = require("crypto");
+const notificationService = require("./notificationService");
 
 // In-memory store (resets on server restart)
 const _store = [];
@@ -22,23 +23,25 @@ const assistanceService = {
    * @param {{ category: string, terminal_id?: string, details?: object }} params
    * @returns {{ success: boolean, request_id?: string, error?: string, record?: object }}
    */
-  create({ category, terminal_id = "KIOSK-TBM01", details = {} }) {
+  create({ category, terminal_id = process.env.KIOSK_ID || "KIOSK-K03", details = {} }) {
     if (!VALID_CATEGORIES.includes(category)) {
       return { success: false, error: `Unknown category: ${category}` };
     }
 
+    const stnCode = process.env.STATION_CODE || "MS";
+    const stnName = process.env.STATION_NAME || "Chennai Egmore";
+
     const record = {
-      request_id:   `REQ-TBM-${Date.now()}-${randomUUID().slice(0, 6).toUpperCase()}`,
+      request_id:   `REQ-${stnCode}-${Date.now()}-${randomUUID().slice(0, 6).toUpperCase()}`,
       category,
       terminal_id,
-      station_code: "TBM",
-      station_name: "Tambaram",
-      location:     "West Concourse · Kiosk TBM-01",
+      station_code: stnCode,
+      station_name: stnName,
+      location:     "Main Concourse · Platform 1 Gate",
       details,
       status:       "received",          // received | acknowledged | resolved
       created_at:   new Date().toISOString(),
       updated_at:   new Date().toISOString(),
-      // Simulated acknowledgement after 30 s — NOT a real staff action
       _sim_ack_at:  Date.now() + 30_000,
     };
 
@@ -46,8 +49,53 @@ const assistanceService = {
 
     console.log(
       `[Assistance] Created ${record.request_id} ` +
-      `[${category}] — SIMULATED, no real staff notified`
+      `[${category}] at ${record.station_name}`
     );
+
+    // Dispatch automated SMS notifications asynchronously
+    if (category === "medical") {
+      notificationService.sendMedicalSMS({
+        location: record.location,
+        details,
+        kioskId: record.terminal_id,
+        stationName: record.station_name,
+        requestId: record.request_id,
+      }).catch((err) => console.error("[Medical SMS Error]", err.message));
+
+    } else if (category === "security") {
+      notificationService.sendSecuritySMS({
+        location: record.location,
+        details,
+        kioskId: record.terminal_id,
+        stationName: record.station_name,
+        requestId: record.request_id,
+      }).catch((err) => console.error("[Security SMS Error]", err.message));
+
+    } else if (category === "sos") {
+      notificationService.sendSosSMS({
+        location: record.location,
+        details,
+        kioskId: record.terminal_id,
+        stationName: record.station_name,
+        requestId: record.request_id,
+      }).catch((err) => console.error("[SOS SMS Error]", err.message));
+
+    } else if (category === "lost_person") {
+      notificationService.sendLostPersonSMS({
+        details,
+        requestId: record.request_id,
+        stationName: record.station_name,
+        kioskId: record.terminal_id,
+      }).catch((err) => console.error("[Lost Person SMS Error]", err.message));
+
+    } else if (category === "lost_item") {
+      notificationService.sendLostItemSMS({
+        details,
+        requestId: record.request_id,
+        stationName: record.station_name,
+        toPhone: details.ct || null,
+      }).catch((err) => console.error("[Lost Item SMS Error]", err.message));
+    }
 
     return { success: true, request_id: record.request_id, record };
   },

@@ -20,6 +20,13 @@ import threading
 import time
 import traceback
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -95,7 +102,7 @@ class _MJPEGHandler(BaseHTTPRequestHandler):
                         self.wfile.write(b"\r\n")
                     else:
                         time.sleep(0.05)
-            except (BrokenPipeError, ConnectionResetError):
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, ConnectionError):
                 pass
 
         elif self.path == "/status":
@@ -352,7 +359,7 @@ async def _main_async():
     cam_thread.start()
 
     # ---- Start WebSocket server ----
-    print(f"[WS] Gesture WebSocket → ws://localhost:{PYTHON_SERVICE_PORT}")
+    print(f"[WS] Gesture WebSocket -> ws://localhost:{PYTHON_SERVICE_PORT}")
     ws_server = await websockets.serve(
         _ws_handler,
         PYTHON_SERVICE_HOST,
@@ -368,7 +375,7 @@ async def _main_async():
 
 def main():
     print("=" * 60)
-    print("  SignMeet — Python Recognition Service")
+    print("  SignMeet -- Python Recognition Service")
     print("=" * 60)
     try:
         asyncio.run(_main_async())

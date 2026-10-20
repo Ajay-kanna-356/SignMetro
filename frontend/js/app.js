@@ -34,7 +34,10 @@
       State.go("sos", {});
       IntentRouter.notifyAssistance("sos").then(() => IntentRouter.track());
     },
-    kind:  (v) => State.setD({ kind: v }),
+    kind:  (v) => {
+      State.setD({ kind: v });
+      IntentRouter.notifyAssistance("sos", { kind: v });
+    },
     home:  ()  => State.home(),
     back:  ()  => State.back(),
     tab:   (v) => State.set({ d: { tab: v, q: "" } }),
@@ -49,8 +52,20 @@
       document.body.style.fontSize = !s.fs ? "22px" : "";
     },
     to:    (v) => State.go("map", { to: v }),
-    body:  (v) => State.setD({ body: v }),
-    more:  ()  => State.setD({ more: 1 }),
+    body:  (v) => {
+      State.setD({ body: v });
+      IntentRouter.notifyAssistance("medical", { body: v });
+    },
+    more:  ()  => {
+      State.setD({ more: 1 });
+      const scr = State.get().scr;
+      const cur = State.get().d || {};
+      IntentRouter.notifyAssistance(scr === "security" ? "security" : "medical", {
+        more: true,
+        body: cur.body,
+        reason: cur.sent,
+      });
+    },
     cx:    ()  => State.setD({ cf: 1 }),
     cxn:   ()  => State.setD({ cf: 0 }),
     cxy:   ()  => State.done("Request cancelled."),

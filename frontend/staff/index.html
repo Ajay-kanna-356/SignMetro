@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SignMetro — Station Control · Chennai Egmore</title>
+  <meta name="description" content="Southern Railway SignMetro Staff Incident & Emergency Operations Center">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚉</text></svg>">
+  <link rel="stylesheet" href="staff.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Emergency Banner -->
+  <div id="emergency-banner" class="emergency-banner hidden">
+    <div class="banner-left">
+      <div class="banner-strobe"></div>
+      <div class="banner-text">
+        <span class="banner-label">CRITICAL ALERT</span>
+        <strong id="banner-title">EMERGENCY DETECTED</strong>
+        <span id="banner-details">SOS / Medical alert reported from station kiosk</span>
+      </div>
+    </div>
+    <button id="btn-silence-siren" class="btn-silence">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      Silence & Acknowledge
+    </button>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8l3 3 7-7"/></svg>
+      </div>
+      <div class="brand-info">
+        <span class="brand-name">SignMetro</span>
+        <span class="brand-divider"></span>
+        <span class="brand-sub">Station Control · Chennai Egmore (MS)</span>
+      </div>
+    </div>
+
+    <div class="header-clock">
+      <span id="live-time" class="clock-time">--:--:--</span>
+      <span id="live-date" class="clock-date">--- -- --- ----</span>
+    </div>
+
+    <div class="header-controls">
+      <div class="status-indicators">
+        <div class="indicator" id="pill-ws">
+          <span class="indicator-dot dot-ws"></span>
+          <span class="indicator-label">WS</span>
+        </div>
+        <div class="indicator" id="pill-smtp">
+          <span class="indicator-dot dot-smtp"></span>
+          <span class="indicator-label">SMTP</span>
+        </div>
+      </div>
+      <button id="btn-audio-toggle" class="btn-audio" title="Enable emergency audio alarm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 1 0 8"/><path d="M22 6a10 10 0 0 1 0 12"/><path d="M2 14v-4l6-2v8L2 14z"/></svg>
+        <span class="audio-label">Arm Alarm</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- KPI Row -->
+    <section class="kpi-row">
+      <div class="kpi-card kpi-emergency" data-filter="emergency">
+        <div class="kpi-top">
+          <span class="kpi-label">Emergencies</span>
+          <div class="kpi-dot kpi-dot-red"></div>
+        </div>
+        <div class="kpi-num" id="kpi-emergencies">0</div>
+        <div class="kpi-meta">
+          <span id="kpi-emergencies-tag" class="kpi-tag">All Clear</span>
+          <span class="kpi-desc">SOS · Medical · Security</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-person" data-filter="lost_person">
+        <div class="kpi-top">
+          <span class="kpi-label">Missing Persons</span>
+          <div class="kpi-dot kpi-dot-amber"></div>
+        </div>
+        <div class="kpi-num" id="kpi-persons">0</div>
+        <div class="kpi-meta">
+          <span id="kpi-persons-tag" class="kpi-tag">0 Open</span>
+          <span class="kpi-desc">Guardian contact on file</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-item" data-filter="lost_item">
+        <div class="kpi-top">
+          <span class="kpi-label">Lost Property</span>
+          <div class="kpi-dot kpi-dot-blue"></div>
+        </div>
+        <div class="kpi-num" id="kpi-items">0</div>
+        <div class="kpi-meta">
+          <span id="kpi-items-tag" class="kpi-tag">0 In Queue</span>
+          <span class="kpi-desc">Bags · Wallets · Electronics</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-resolved" data-filter="resolved">
+        <div class="kpi-top">
+          <span class="kpi-label">Resolved</span>
+          <div class="kpi-dot kpi-dot-green"></div>
+        </div>
+        <div class="kpi-num" id="kpi-resolved">0</div>
+        <div class="kpi-meta">
+          <span class="kpi-tag">All Time</span>
+          <span class="kpi-desc">Closed & email dispatched</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="toolbar">
+      <nav class="tab-nav" role="tablist">
+        <button class="tab active" data-tab="all" role="tab">All <span class="tab-badge" id="tab-cnt-all">0</span></button>
+        <button class="tab tab-red" data-tab="emergency" role="tab">Emergencies <span class="tab-badge" id="tab-cnt-emergency">0</span></button>
+        <button class="tab tab-amber" data-tab="lost_person" role="tab">Lost Persons <span class="tab-badge" id="tab-cnt-person">0</span></button>
+        <button class="tab tab-blue" data-tab="lost_item" role="tab">Lost Items <span class="tab-badge" id="tab-cnt-item">0</span></button>
+        <button class="tab tab-green" data-tab="resolved" role="tab">Resolved <span class="tab-badge" id="tab-cnt-resolved">0</span></button>
+      </nav>
+
+      <div class="toolbar-right">
+        <div class="search-wrap">
+          <svg class="search-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="incident-search" class="search-input" placeholder="Search by ID, name, item…">
+          <button id="btn-clear-search" class="btn-clear hidden">&times;</button>
+        </div>
+        <button id="btn-refresh" class="btn-refresh" title="Refresh incidents">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+    </section>
+
+    <!-- Incidents -->
+    <section class="incidents-section">
+      <div class="incidents-header">
+        <div class="incidents-title-row">
+          <h2 class="incidents-title" id="view-title">All Reports</h2>
+          <span class="incidents-count" id="results-count">0 reports</span>
+        </div>
+        <div class="live-indicator">
+          <span class="live-dot"></span>
+          <span class="live-label">Live sync</span>
+        </div>
+      </div>
+
+      <div id="incidents-grid" class="incidents-list">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <p class="empty-title">Loading incidents…</p>
+          <p class="empty-sub">Connecting to station backend on port 4000</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================= -->
+  <!-- Modal: Mark Found & Send Email            -->
+  <!-- ========================================= -->
+  <div id="modal-mark-found" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-head-icon" id="found-modal-icon">📦</div>
+        <div>
+          <h3 class="modal-title" id="found-modal-title">Mark Found & Notify Passenger</h3>
+          <p class="modal-subtitle" id="found-modal-subtitle">Send an official email via SMTP to the passenger</p>
+        </div>
+        <button class="modal-x" id="btn-close-found-modal">&times;</button>
+      </div>
+
+      <form id="form-mark-found" class="modal-body">
+        <input type="hidden" id="found-req-id">
+        <input type="hidden" id="found-category">
+
+        <div class="field">
+          <label class="field-label" for="found-recipient-email">Recipient Email <span class="req">*</span></label>
+          <input class="field-input" type="email" id="found-recipient-email" required placeholder="passenger@example.com">
+          <span class="field-hint" id="found-email-hint">Auto-extracted from kiosk report</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="found-location-select">Pickup Location <span class="req">*</span></label>
+          <select class="field-input" id="found-location-select">
+            <option value="Station Master Office, Platform 1 Concourse">Station Master Office, Platform 1 Concourse</option>
+            <option value="RPF Helpdesk &amp; Control Room, Platform 1 Gate">RPF Helpdesk & Control Room, Platform 1 Gate</option>
+            <option value="Lost Property Counter, Platform 2 Waiting Area">Lost Property Counter, Platform 2 Waiting Area</option>
+            <option value="Passenger Assistance Kiosk K-03, Main Concourse">Passenger Assistance Kiosk K-03, Main Concourse</option>
+            <option value="custom">— Custom Location —</option>
+          </select>
+          <input class="field-input hidden" type="text" id="found-location-custom" placeholder="Enter custom location" style="margin-top:6px;">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="found-instructions">Claim Instructions</label>
+          <textarea class="field-input" id="found-instructions" rows="2" placeholder="e.g. Present valid photo ID and Reference ID to claim."></textarea>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="found-staff-notes">Staff Notes (Internal)</label>
+          <input class="field-input" type="text" id="found-staff-notes" placeholder="e.g. Recovered near Coach S4, handed to Station Master">
+        </div>
+
+        <div class="email-preview">
+          <div class="email-preview-head">
+            <span>Email Preview · <b id="preview-template-name">Lost Property Found</b></span>
+            <span class="preview-lock">🔒 SSL</span>
+          </div>
+          <p class="email-preview-body" id="preview-text-snippet">Dear Passenger, station staff at Chennai Egmore (MS) have recovered your item…</p>
+        </div>
+
+        <div class="modal-foot">
+          <button type="button" class="btn-secondary" id="btn-cancel-found-modal">Cancel</button>
+          <button type="submit" class="btn-primary" id="btn-submit-found">
+            <span class="btn-text">Send Email & Mark Found</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- Modal: Test SMTP (hidden, kept for JS)    -->
+  <!-- ========================================= -->
+  <div id="modal-test-email" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-head-icon">✉️</div>
+        <div>
+          <h3 class="modal-title">Test SMTP Delivery</h3>
+          <p class="modal-subtitle">Verify Nodemailer credentials in .env</p>
+        </div>
+        <button class="modal-x" id="btn-close-test-email">&times;</button>
+      </div>
+      <form id="form-test-email" class="modal-body">
+        <div class="field">
+          <label class="field-label" for="test-email-target">Recipient Email</label>
+          <input class="field-input" type="email" id="test-email-target" required placeholder="your@email.com">
+          <span class="field-hint">A test message will be sent from your configured SMTP sender.</span>
+        </div>
+        <div id="test-email-result" class="test-result hidden"></div>
+        <div class="modal-foot">
+          <button type="button" class="btn-secondary" id="btn-cancel-test-email">Cancel</button>
+          <button type="submit" class="btn-primary" id="btn-submit-test-email">
+            <span class="btn-text">Send Test</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- Modal: Simulate (hidden, kept for JS)     -->
+  <!-- ========================================= -->
+  <div id="modal-simulate" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-head-icon">⚡</div>
+        <div>
+          <h3 class="modal-title">Simulate Incident</h3>
+          <p class="modal-subtitle">Test real-time WebSocket push & siren</p>
+        </div>
+        <button class="modal-x" id="btn-close-simulate">&times;</button>
+      </div>
+      <div class="sim-list">
+        <div class="sim-row" data-sim="sos">
+          <span class="sim-ico">🚨</span>
+          <div class="sim-text"><b>SOS / General Emergency</b><span>Triggers audio alarm & visual HUD</span></div>
+          <button class="btn-sim">Trigger</button>
+        </div>
+        <div class="sim-row" data-sim="medical">
+          <span class="sim-ico">🩺</span>
+          <div class="sim-text"><b>Medical Emergency</b><span>Passenger needs immediate attention</span></div>
+          <button class="btn-sim">Trigger</button>
+        </div>
+        <div class="sim-row sim-option-card" data-sim="lost_person">
+          <span class="sim-ico">👤</span>
+          <div class="sim-text"><b>Missing Person Report</b><span>Includes guardian contact & map pin</span></div>
+          <button class="btn-sim">Trigger</button>
+        </div>
+        <div class="sim-row sim-option-card" data-sim="lost_item">
+          <span class="sim-ico">🎒</span>
+          <div class="sim-text"><b>Lost Property</b><span>Tests found & email dispatch workflow</span></div>
+          <button class="btn-sim">Trigger</button>
+        </div>
+      </div>
+      <div class="modal-foot" style="padding:16px 24px 20px;">
+        <button type="button" class="btn-secondary" id="btn-cancel-simulate">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- Modal: View Map (kept for JS, hidden)     -->
+  <!-- ========================================= -->
+  <div id="modal-view-map" class="modal-overlay hidden">
+    <div class="modal modal-wide">
+      <div class="modal-head">
+        <div class="modal-head-icon">🗺️</div>
+        <div>
+          <h3 class="modal-title" id="map-modal-title">Station Location Map</h3>
+          <p class="modal-subtitle" id="map-modal-subtitle">Pinpoint marked by passenger at kiosk</p>
+        </div>
+        <button class="modal-x" id="btn-close-map-modal">&times;</button>
+      </div>
+      <div class="map-body">
+        <div class="map-meta">
+          <div class="map-meta-left">
+            <span class="map-tag" id="map-cat-tag">Lost Report</span>
+            <span class="map-desc" id="map-desc-text">Item or person description</span>
+          </div>
+          <div class="map-meta-right">
+            <span class="map-pill map-pill-green" id="map-zone-pill">Station Concourse</span>
+            <span class="map-pill map-pill-amber" id="map-coords-pill">📍 Coords</span>
+          </div>
+        </div>
+        <div id="modal-map-svg-wrap" class="map-svg-wrap"></div>
+        <p class="map-guide">Chennai Egmore (MS) — West Concourse (GST Road) · Platforms 1–4 Suburban · Platforms 5–10 Express · East Entrance (Velachery Rd)</p>
+      </div>
+      <div class="modal-foot" style="padding:14px 24px 20px;">
+        <button type="button" class="btn-secondary" id="btn-close-map-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-stack" class="toast-stack"></div>
+
+  <!-- Invisible trigger buttons needed by staff.js listeners (display:none) -->
+  <button id="btn-test-siren" style="display:none"></button>
+  <button id="btn-open-test-email" style="display:none"></button>
+  <button id="btn-open-simulate" style="display:none"></button>
+
+  <script src="staff_audio.js"></script>
+  <script src="staff.js"></script>
+</body>
+</html>

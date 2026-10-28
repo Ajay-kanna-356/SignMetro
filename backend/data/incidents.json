@@ -1,0 +1,521 @@
+[
+  {
+    "request_id": "REQ-MS-239779-C948",
+    "category": "lost_item",
+    "terminal_id": "KIOSK-K03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "cat": "Wallet",
+      "c": "Black leather Fossil wallet",
+      "d": "Has metro card and ID",
+      "t": "12638",
+      "email": "passenger.test@gmail.com",
+      "phone": "9876543210",
+      "pin": [
+        379,
+        224
+      ]
+    },
+    "status": "received",
+    "created_at": "2026-10-28T09:03:59.779Z",
+    "updated_at": "2026-10-28T09:03:59.779Z"
+  },
+  {
+    "request_id": "REQ-MS-225869-125F",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Chest pain"
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T09:03:45.871Z",
+    "updated_at": "2026-10-28T09:03:45.957Z",
+    "resolved_at": "2026-10-28T09:03:45.957Z",
+    "resolved_by": "Station Duty Officer",
+    "staff_notes": "Cancelled by passenger at kiosk (I am okay)",
+    "resolution": {
+      "type": "resolved",
+      "staff_notes": "Cancelled by passenger at kiosk (I am okay)",
+      "resolved_by": "Station Duty Officer",
+      "timestamp": "2026-10-28T09:03:45.957Z"
+    }
+  },
+  {
+    "request_id": "REQ-MS-090961-49D0",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Chest pain"
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T09:01:30.962Z",
+    "updated_at": "2026-10-28T09:01:31.055Z",
+    "resolved_at": "2026-10-28T09:01:31.055Z",
+    "resolved_by": "Station Duty Officer",
+    "staff_notes": "Cancelled by passenger at kiosk (I am okay)"
+  },
+  {
+    "request_id": "REQ-MS-215005-C949",
+    "category": "lost_person",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "n": "uday",
+      "a": "23",
+      "d": "green short",
+      "w": "Platform 1 bench",
+      "gn": "Ajay",
+      "email": "ajaykanna356@gmail.com",
+      "pin": [
+        379,
+        224
+      ]
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T05:10:15.007Z",
+    "updated_at": "2026-10-28T05:11:32.369Z",
+    "resolved_at": "2026-10-28T05:11:32.369Z",
+    "resolution": {
+      "type": "person_located",
+      "found_location": "Station Master Office, Platform 1 Concourse",
+      "claim_instructions": "Please proceed to the Station Master Office on Platform 1 Concourse with valid photo identification to be reunited.",
+      "staff_notes": "",
+      "resolved_by": "Station Duty Officer",
+      "timestamp": "2026-10-28T05:11:16.643Z"
+    },
+    "email_dispatch": {
+      "sent": true,
+      "simulated": false,
+      "to": "ajaykanna356@gmail.com",
+      "timestamp": "2026-10-28T05:11:20.345Z",
+      "error": null
+    },
+    "resolved_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-055094-EB26",
+    "category": "security",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "reason": "Being followed"
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T05:07:35.094Z",
+    "updated_at": "2026-10-28T05:07:44.959Z",
+    "resolved_at": "2026-10-28T05:07:44.959Z",
+    "resolved_by": "Passenger (Kiosk)",
+    "staff_notes": "Passenger confirmed safe at kiosk"
+  },
+  {
+    "request_id": "REQ-MS-735205-8B94",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Leg"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:45:35.205Z",
+    "updated_at": "2026-10-28T04:45:46.249Z",
+    "acknowledged_at": "2026-10-28T04:45:46.249Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-698529-F156",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Head"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:44:58.529Z",
+    "updated_at": "2026-10-28T04:45:30.146Z",
+    "acknowledged_at": "2026-10-28T04:45:09.641Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-677793-FE87",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Head"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:44:37.793Z",
+    "updated_at": "2026-10-28T04:44:41.428Z",
+    "acknowledged_at": "2026-10-28T04:44:41.428Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-638228-A65D",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Head"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:43:58.228Z",
+    "updated_at": "2026-10-28T04:44:25.858Z",
+    "acknowledged_at": "2026-10-28T04:44:00.833Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-244162-736E",
+    "category": "lost_item",
+    "terminal_id": "KIOSK-K03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "cat": "Wallet",
+      "c": "Black Leather",
+      "pin": [
+        350,
+        180
+      ],
+      "email": "passenger.wallet.test@gmail.com",
+      "phone": "+91 98401 99887"
+    },
+    "status": "received",
+    "created_at": "2026-10-28T04:37:24.164Z",
+    "updated_at": "2026-10-28T04:37:24.175Z"
+  },
+  {
+    "request_id": "REQ-MS-191898-BBC5",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Chest / Heart"
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T04:36:31.901Z",
+    "updated_at": "2026-10-28T04:36:32.014Z",
+    "resolved_at": "2026-10-28T04:36:32.014Z",
+    "resolved_by": "Station Duty Officer",
+    "staff_notes": "Cancelled by passenger at kiosk (I am okay)"
+  },
+  {
+    "request_id": "REQ-MS-703326-2EDD",
+    "category": "lost_person",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "n": "kanna",
+      "a": "22",
+      "d": "black shirt",
+      "pin": [
+        320.00323833363973,
+        174.1749855290911
+      ]
+    },
+    "status": "received",
+    "created_at": "2026-10-28T04:11:43.327Z",
+    "updated_at": "2026-10-28T04:11:43.327Z"
+  },
+  {
+    "request_id": "REQ-MS-460343-C466",
+    "category": "security",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "reason": "Theft"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:07:40.343Z",
+    "updated_at": "2026-10-28T04:07:42.574Z",
+    "acknowledged_at": "2026-10-28T04:07:42.574Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-382574-B856",
+    "category": "security",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "reason": "Other"
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T04:06:22.575Z",
+    "updated_at": "2026-10-28T04:06:52.526Z",
+    "acknowledged_at": "2026-10-28T04:06:25.919Z",
+    "acknowledged_by": "Station Duty Officer",
+    "resolved_at": "2026-10-28T04:06:52.526Z",
+    "resolved_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-346284-4006",
+    "category": "security",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "reason": "Theft"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:05:46.284Z",
+    "updated_at": "2026-10-28T04:05:49.652Z",
+    "acknowledged_at": "2026-10-28T04:05:49.652Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-067671-8539",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Chest"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:01:07.671Z",
+    "updated_at": "2026-10-28T04:01:15.177Z",
+    "acknowledged_at": "2026-10-28T04:01:15.177Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-037755-FFD8",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {},
+    "status": "acknowledged",
+    "created_at": "2026-10-28T04:00:37.755Z",
+    "updated_at": "2026-10-28T04:00:40.239Z",
+    "acknowledged_at": "2026-10-28T04:00:40.239Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-843962-D416",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "body": "Arm"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T03:57:23.962Z",
+    "updated_at": "2026-10-28T03:57:27.087Z",
+    "acknowledged_at": "2026-10-28T03:57:27.086Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-841873-23BF",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {},
+    "status": "acknowledged",
+    "created_at": "2026-10-28T03:57:21.873Z",
+    "updated_at": "2026-10-28T03:57:27.095Z",
+    "acknowledged_at": "2026-10-28T03:57:27.095Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-707366-D5EE",
+    "category": "lost_person",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "n": "Ajay",
+      "a": "22",
+      "d": "black shirt",
+      "w": "Waiting hall",
+      "pin": [
+        468.09688986468933,
+        202.26892301309746
+      ]
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T03:55:07.366Z",
+    "updated_at": "2026-10-28T03:55:20.987Z",
+    "acknowledged_at": "2026-10-28T03:55:20.987Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-642428-DD09",
+    "category": "security",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "reason": "Being followed"
+    },
+    "status": "acknowledged",
+    "created_at": "2026-10-28T03:54:02.428Z",
+    "updated_at": "2026-10-28T03:54:09.873Z",
+    "acknowledged_at": "2026-10-28T03:54:09.873Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-612342-07F2",
+    "category": "medical",
+    "terminal_id": "K-03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {},
+    "status": "acknowledged",
+    "created_at": "2026-10-28T03:53:32.342Z",
+    "updated_at": "2026-10-28T03:53:37.494Z",
+    "acknowledged_at": "2026-10-28T03:53:37.494Z",
+    "acknowledged_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-387774-988C",
+    "category": "lost_item",
+    "terminal_id": "KIOSK-K03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse · Platform 1 Gate",
+    "details": {
+      "cat": "Laptop",
+      "c": "Silver MacBook Air",
+      "d": "Forgot on Platform 1 bench",
+      "ct": "ajaykanna356@gmail.com",
+      "name": "Ajay Kanna",
+      "cs": true
+    },
+    "status": "resolved",
+    "created_at": "2026-10-28T03:49:47.777Z",
+    "updated_at": "2026-10-28T04:14:45.225Z",
+    "resolved_at": "2026-10-28T04:14:45.225Z",
+    "resolution": {
+      "type": "item_found",
+      "found_location": "Station Master Office, Platform 1 Concourse",
+      "claim_instructions": "Please present your Report ID and Aadhaar card at the counter.",
+      "staff_notes": "Safely deposited by Platform 1 duty inspector",
+      "resolved_by": "Station Duty Officer",
+      "timestamp": "2026-10-28T03:49:47.833Z"
+    },
+    "email_dispatch": {
+      "sent": true,
+      "simulated": false,
+      "to": "ajaykanna356@gmail.com",
+      "timestamp": "2026-10-28T03:49:50.840Z",
+      "error": null
+    },
+    "resolved_by": "Station Duty Officer"
+  },
+  {
+    "request_id": "REQ-MS-20261028-A4F1",
+    "category": "lost_item",
+    "terminal_id": "KIOSK-K03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Platform 1 · Near Enquiry Counter",
+    "details": {
+      "cat": "Bag",
+      "c": "Black HP Backpack with orange strap",
+      "d": "Contains college notebooks and a blue water bottle",
+      "t": "12637 Vaigai SF Exp (Coach S4)",
+      "ct": "kanna.station.test@gmail.com",
+      "name": "R. Kannan",
+      "phone": "+91 98401 23456",
+      "cs": true
+    },
+    "status": "found",
+    "created_at": "2026-10-28T03:31:59.829Z",
+    "updated_at": "2026-10-28T03:52:31.926Z",
+    "resolved_at": "2026-10-28T03:52:31.926Z",
+    "resolution": {
+      "type": "item_found",
+      "found_location": "Station Master Office, Platform 1 Concourse",
+      "claim_instructions": "Please present this email or your Reference ID along with a valid government photo ID at the Station Master Office to claim.",
+      "staff_notes": "",
+      "resolved_by": "Station Duty Officer",
+      "timestamp": "2026-10-28T03:52:31.926Z"
+    },
+    "email_dispatch": {
+      "sent": true,
+      "simulated": false,
+      "to": "ajaykanna356@gmail.com",
+      "timestamp": "2026-10-28T03:52:36.022Z",
+      "error": null
+    }
+  },
+  {
+    "request_id": "REQ-MS-20261028-B8D2",
+    "category": "lost_person",
+    "terminal_id": "KIOSK-K01",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Main Concourse Entrance Gate 2",
+    "details": {
+      "n": "Aarav",
+      "a": "7",
+      "d": "Wearing yellow t-shirt and blue jeans, carrying a Spiderman water bottle",
+      "w": "Platform 1 bench near Waiting Hall",
+      "dk": false,
+      "gn": "Priya Sharma (Mother)",
+      "phone": "+91 94441 87654",
+      "email": "priya.sharma.test@gmail.com",
+      "pin": [
+        280,
+        140
+      ]
+    },
+    "status": "received",
+    "created_at": "2026-10-28T03:37:59.829Z",
+    "updated_at": "2026-10-28T03:37:59.829Z"
+  },
+  {
+    "request_id": "REQ-MS-20261028-C9E3",
+    "category": "medical",
+    "terminal_id": "KIOSK-K03",
+    "station_code": "MS",
+    "station_name": "Chennai Egmore",
+    "location": "Platform 1 Concourse",
+    "details": {
+      "body": "Dizziness & Chest tightness",
+      "notes": "Senior citizen requested immediate wheelchair assistance"
+    },
+    "status": "acknowledged",
+    "acknowledged_at": "2026-10-28T03:18:59.829Z",
+    "created_at": "2026-10-28T03:13:59.829Z",
+    "updated_at": "2026-10-28T03:18:59.829Z"
+  }
+]

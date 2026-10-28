@@ -128,22 +128,45 @@
     cancel(_scr) { State.home(); },
   };
 
-  // ── POST assistance request to backend ──────────────────────────────
+  // ── POST or PATCH assistance request to backend ────────────────────
   async function _notifyAssistance(category, details = {}) {
     try {
+      const curReqId = State.get().d?.request_id;
       const res = await fetch("/api/assistance", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ category, details }),
+        body:    JSON.stringify({
+          category,
+          details,
+          request_id: curReqId || undefined,
+        }),
       });
       const json = await res.json();
       if (json.request_id) {
-        console.log(`[Assist] Request created: ${json.request_id} (SIMULATED)`);
+        console.log(`[Assist] Request ${json.updated ? "updated" : "created"}: ${json.request_id}`);
         State.setD({ request_id: json.request_id });
       }
       return json;
     } catch (err) {
       console.warn("[Assist] Failed to record request:", err.message);
+      return null;
+    }
+  }
+
+  // ── Cancel / Resolve assistance request on backend ──────────────────
+  async function _cancelAssistance(staffNotes = "Cancelled by passenger at kiosk") {
+    try {
+      const reqId = State.get().d?.request_id;
+      if (!reqId) return null;
+      console.log(`[Assist] Resolving request ${reqId} due to passenger action: ${staffNotes}`);
+      const res = await fetch(`/api/assistance/${reqId}/resolve`, {
+        method:  "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ staffNotes, staffName: "Passenger (Kiosk)" }),
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn("[Assist] Failed to cancel request on backend:", err.message);
       return null;
     }
   }
@@ -182,6 +205,7 @@
 
     /** Expose _notifyAssistance for manual SOS / security submission */
     notifyAssistance: _notifyAssistance,
+    cancelAssistance: _cancelAssistance,
 
     clearStepTimers: _clearStepTimers,
     track:           _track,

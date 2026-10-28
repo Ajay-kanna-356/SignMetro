@@ -1,7 +1,16 @@
-# SignMeet 🚉🤟
+# SignMetro 🚉🤟
 
-**A Sign-First Railway Station Assistance System**  
-Chennai Egmore Railway Station · Indian Sign Language · Local Kiosk Prototype
+**A Sign-First Railway Station Assistance & Operations System**  
+Chennai Egmore Railway Station · Indian Sign Language · Local Kiosk & Staff Control Center
+
+---
+
+## Overview
+
+**SignMetro** (formerly *SignMeet*) provides an accessible, sign-first railway station navigation and emergency response experience for Deaf and hard-of-hearing passengers:
+
+1. **Passenger Assistance Kiosk (`http://localhost:5000`)**: Touchscreen + AI gesture recognition (Indian Sign Language via webcam) for train timetables, platform directions, accessibility navigation, medical/security assistance, and lost & found reporting.
+2. **Station Staff Control Dashboard (`http://localhost:4000`)**: Real-time operations center for station masters and duty staff featuring live WebSocket incident streaming, an audible emergency siren, interactive station map pinpoints, and automated SMTP email dispatch to passengers when lost items/persons are found.
 
 ---
 
@@ -11,15 +20,15 @@ Chennai Egmore Railway Station · Indian Sign Language · Local Kiosk Prototype
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| Python | ≥ 3.10 | Recognition service |
-| Node.js | ≥ 18 | Backend + static server |
-| Webcam | Any | Gesture input |
+| Python | ≥ 3.10 | Gesture recognition service |
+| Node.js | ≥ 18 | Backend, APIs, Kiosk & Staff servers |
+| Webcam | Any standard | Video gesture input |
 
 ### 1. Clone & install Node dependencies
 
 ```bash
 git clone <repo-url>
-cd SignMeet
+cd SignMetro
 npm install
 ```
 
@@ -36,40 +45,58 @@ pip install -r recognition/requirements.txt
 
 ### 3. Verify model and dataset
 
-The trained model **`isl_transformer_best_132.keras`** must be in the project root.  
-The dataset folder **`dataset_sign_metro/`** should also be in the project root (it is used as a fallback for class name discovery, though names are hardcoded in `recognition/config.py`).
+- The trained model **`isl_transformer_best_132.keras`** must reside in the project root.
+- The dataset folder **`dataset_sign_metro/`** should also be in the project root (used as fallback for class discovery).
 
-### 4. Configure environment (optional)
+### 4. Configure environment
+
+Copy `.env.example` to `.env` and configure your ports and credentials:
 
 ```bash
-cp .env.example .env   # already done by setup
-# Edit .env if you need a different port or kiosk ID
+cp .env.example .env
+```
+
+Key environment variables:
+```env
+PORT=5000                     # Passenger Kiosk port
+STAFF_PORT=4000               # Station Staff Dashboard port
+KIOSK_ID=K-03
+STATION_CODE=MS
+STATION_NAME="Chennai Egmore"
+
+# SMTP Email Configuration (Nodemailer)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+SMTP_FROM="SignMetro Station Control <your_email@gmail.com>"
 ```
 
 ### 5. Start services
 
 #### Option A — Automatic (Windows)
-```
+```bash
 scripts\start_kiosk.bat
 ```
-This opens three windows: Python service, Node backend, and the kiosk browser.
 
-#### Option B — Manual (any OS)
+#### Option B — Manual
 
 **Terminal 1 — Python recognition service:**
 ```bash
-# From project root (not from recognition/)
+# From project root
 python -m recognition.service
 ```
 
-**Terminal 2 — Node.js backend:**
+**Terminal 2 — Node.js backend & dashboards:**
 ```bash
 npm run dev         # auto-restart via nodemon
-# or: npm start    # no auto-restart
+# or: npm start
 ```
 
-**Browser:**  
-Open `http://localhost:5000`
+**Access in Browser:**
+- **Passenger Kiosk:** [http://localhost:5000](http://localhost:5000)
+- **Station Staff Dashboard:** [http://localhost:4000](http://localhost:4000) (also accessible at `http://localhost:5000/staff`)
 
 ---
 
@@ -77,12 +104,35 @@ Open `http://localhost:5000`
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| Kiosk UI | `http://localhost:5000` | Main passenger-facing interface |
-| REST API | `http://localhost:5000/api` | Train, station, assistance APIs |
-| System status | `http://localhost:5000/api/status` | Health check |
-| Browser WebSocket | `ws://localhost:5000/ws` | Gesture events (auto-managed by browser) |
-| Python WebSocket | `ws://localhost:8765` | Raw gesture events from Python |
-| Camera preview | `http://localhost:8766/video_feed` | MJPEG stream (Python-owned camera) |
+| **Passenger Kiosk UI** | `http://localhost:5000` | Main passenger interface with ISL gesture HUD & touch controls |
+| **Station Staff Dashboard** | `http://localhost:4000` | Operations control center with live incident feed & siren alarm |
+| **Assistance REST API** | `http://localhost:5000/api/assistance` | Log, retrieve, update status, and dispatch found emails |
+| **Train Information API** | `http://localhost:5000/api/trains` | Search trains, routes, and upcoming departures |
+| **Station Facility API** | `http://localhost:5000/api/station` | Facilities, layout schematic, and accessibility points |
+| **System Status** | `http://localhost:5000/api/status` | Backend health check & Python bridge connection status |
+| **Kiosk WebSocket** | `ws://localhost:5000/ws` | Real-time gesture and incident events |
+| **Staff WebSocket** | `ws://localhost:4000/ws` | Real-time incident updates & alarm triggers |
+| **Python WebSocket** | `ws://localhost:8765` | Raw gesture event pipeline from Python |
+| **Camera Feed** | `http://localhost:8766/video_feed` | Low-latency MJPEG preview with skeleton landmark overlays |
+
+---
+
+## Key Features
+
+### 1. Station Staff Control Dashboard (`http://localhost:4000`)
+- **Real-Time WebSocket Feed:** Automatic streaming of all incoming SOS, Medical, Security, Lost Person, and Lost Item reports without manual refreshing.
+- **Audio Emergency Siren:** Synthesized dual-tone siren (Web Audio API) triggered immediately upon critical emergency events (SOS / Medical / Security), featuring auto-silence upon incident acknowledgement.
+- **Incident Lifecycle Tracking:** Seamlessly transition alerts through `Open` → `In Progress` → `Resolved` with staff resolution audit logs.
+- **Station Map Pinpoint Inspection:** View the exact coordinates where passengers placed their location pins on the Egmore station schematic.
+- **Automated "Mark Found & Email" Workflow:** When staff locate a lost item or companion, one click resolves the incident and dispatches an official pickup email directly to the passenger's registered email via SMTP.
+
+### 2. Accessible Passenger Kiosk (`http://localhost:5000`)
+- **11 ISL Sign Gestures:** Real-time recognition using MediaPipe Holistic hand landmarks and a 132-feature Transformer classifier.
+- **Live Recognition HUD:** Dynamic progress bar showing gesture confidence percentage, detection threshold, and candidate alternative signs.
+- **Interactive Station Map Pinpoint:** Interactive SVG floor plan where passengers can tap to place an animated glowing red location pin where an item was lost or a person was last seen.
+- **Contact Details Collection:** Directly collects email address and phone number for official updates and notifications.
+- **Smart Medical Alert Flow:** Selecting specific anatomical injury regions updates the active medical incident in real-time on the staff dashboard rather than generating duplicate tickets.
+- **Instant Cancel / Safe Action:** "I'm okay - cancel request" and "I'm safe - done" automatically mark the incident resolved on the staff dashboard.
 
 ---
 
@@ -100,36 +150,11 @@ The trained model recognises 11 gestures:
 | `WHERE` | Station navigation |
 | `TICKET` | Ticket counter directions |
 | `HELP` | Assistance menu |
-| `MEDICAL` | Medical alert (simulated) |
-| `SECURITY` | Security alert (simulated) |
+| `MEDICAL` | Medical alert flow |
+| `SECURITY` | Security assistance |
 | `LOST` | Lost item / person reporting |
 
-> **Note:** `back` and `cancel` appear in the sign simulator but are **not** in the trained model. Navigate backwards using the touchscreen.
-
----
-
-## Sign Simulator (Demo Mode)
-
-The simulator bar at the bottom of the kiosk UI lets you test all flows **without the Python service or webcam**. Click any gesture button to trigger the corresponding action.
-
-The simulator also works when the Python service is running — it directly dispatches the same intent-router functions that real gestures use.
-
----
-
-## Testing Real Gesture Recognition End-to-End
-
-1. Start both services (Python + Node).
-2. Open `http://localhost:5000` in a browser.
-3. Check that the camera widget (bottom-right corner) shows a **green dot** and your live image with hand skeleton overlays.
-4. Perform a sign gesture in front of the webcam.
-5. Watch the camera widget border:
-   - **Yellow** — gesture is being confirmed (needs 3 consecutive matches)
-   - **Green flash** — gesture accepted
-6. The kiosk screen should change to the corresponding view automatically.
-7. Check the browser console for `[Intent] gesture="…"` log messages.
-8. Check the Python terminal for `Accepted: <word> (xx%)` log messages.
-
-**Latency note:** The first gesture after startup takes ~3.3 seconds to fill the 20-frame buffer. Subsequent gestures (after the buffer resets) also take ~3.3 seconds plus ~0.5 seconds for 3-consecutive confirmation. This is the designed recognition cadence — not a bug.
+> **Sign Simulator (Demo Mode):** The simulator bar at the bottom of the kiosk UI allows full testing of all screen flows without requiring a webcam or the Python service.
 
 ---
 
@@ -141,18 +166,23 @@ The simulator also works when the Python service is running — it directly disp
     │ cv2.VideoCapture(0) — Python owns camera exclusively
     ▼
 [ Python Recognition Service ]          ports: WS 8765, HTTP 8766
-    │ MediaPipe Holistic + Transformer
+    │ MediaPipe Holistic + 132-feature Transformer
     │ ├─ MJPEG frames → browser <img src="http://localhost:8766/video_feed">
     │ └─ Gesture events → WS 8765
     ▼
-[ Node.js / Express Backend ]           port: 5000
-    │ Relays gesture events to browser WS (/ws)
-    │ Serves REST APIs and static frontend
+[ Node.js / Express Backend ]           ports: 5000 (Kiosk), 4000 (Staff)
+    │ wsManager.js: Bridges Python WS ↔ Kiosk WS ↔ Staff WS
+    │ assistanceService.js: Persistent storage via backend/data/incidents.json
+    │ emailService.js: Automated passenger pickup notices via Nodemailer SMTP
     ▼
-[ Browser Kiosk UI ]                    http://localhost:5000
-    │ ws_client.js ← WebSocket events
-    │ intent_router.js ← gesture → screen action
-    └─ views.js ← renders all screens
+┌─────────────────────────────────┴─────────────────────────────────┐
+│                                                                   │
+▼                                                                   ▼
+[ Passenger Kiosk UI ] (Port 5000)                [ Staff Control Dashboard ] (Port 4000)
+├─ Live Camera HUD with landmark overlay          ├─ Real-time incident stream & status filters
+├─ Intent router & gesture transitions            ├─ Web Audio emergency alarm synthesizer
+├─ Interactive SVG station map pin selector       ├─ Detailed inspection drawer & station map pin view
+└─ Contact info collection (Email & Phone)        └─ "Mark Found & Email" automated SMTP dispatch
 ```
 
 ---
@@ -160,84 +190,83 @@ The simulator also works when the Python service is running — it directly disp
 ## Project Structure
 
 ```
-SignMeet/
-├── isl_transformer_best_132.keras   # Trained model (not in git)
+SignMetro/
+├── isl_transformer_best_132.keras       # Trained gesture model
 ├── package.json
 ├── .env
 ├── .env.example
+├── readme.md
 │
-├── recognition/                     # Python recognition service
-│   ├── __init__.py
-│   ├── config.py                    # All constants (thresholds, paths)
-│   ├── model_runner.py              # Keras model loader + warm-up
-│   ├── landmark_extractor.py        # 132-feature extraction (unchanged logic)
-│   ├── gesture_pipeline.py          # Buffer, confirmation, duplicate suppression
-│   ├── service.py                   # Main service (camera loop, WS, MJPEG)
+├── recognition/                         # Python recognition service
+│   ├── config.py                        # Recognition constants & thresholds
+│   ├── model_runner.py                  # Keras model loader & warm-up
+│   ├── landmark_extractor.py            # 132-feature landmark extraction
+│   ├── gesture_pipeline.py              # Temporal buffer, confirmation, suppression
+│   ├── service.py                       # Camera loop, WS broadcaster, MJPEG server
 │   └── requirements.txt
 │
-├── backend/                         # Node.js / Express
-│   ├── server.js                    # App entry point, HTTP + WS server
-│   ├── wsManager.js                 # Python↔Browser WebSocket bridge
+├── backend/                             # Node.js backend
+│   ├── server.js                        # Express server (Kiosk on 5000, Staff on 4000)
+│   ├── wsManager.js                     # Unified WebSocket bridge
 │   ├── routes/
-│   │   ├── trains.js
-│   │   ├── station.js
-│   │   └── assistance.js
+│   │   ├── trains.js                    # Train timetable & lookup endpoints
+│   │   ├── station.js                   # Station schematic & facility endpoints
+│   │   └── assistance.js                # Incident management & email dispatch routes
 │   ├── services/
-│   │   ├── trainService.js
-│   │   └── assistanceService.js
+│   │   ├── trainService.js              # Train scheduling service
+│   │   ├── assistanceService.js         # Incident logging & status transitions
+│   │   └── emailService.js              # Nodemailer SMTP integration
 │   └── data/
-│       ├── trains.js                # Simulated train timetable
-│       └── egmore_layout.json       # Simulated station schematic
+│       ├── trains.js                    # Timetable dataset
+│       ├── egmore_layout.json           # Station schematic layout
+│       └── incidents.json               # Persistent JSON incident storage
 │
-├── frontend/                        # Kiosk UI (served as static files)
-│   ├── index.html
-│   ├── css/main.css
-│   └── js/
-│       ├── state.js                 # Kiosk state store
-│       ├── ws_client.js             # Backend WebSocket client
-│       ├── intent_router.js         # Gesture → screen action mapping
-│       ├── views.js                 # All screen templates
-│       └── app.js                   # Bootstrap, event handlers
+├── frontend/                            # Passenger Kiosk UI (Static)
+│   ├── index.html                       # Kiosk main layout & camera widget
+│   ├── css/
+│   │   └── main.css                     # Kiosk styles & unified form input rules
+│   ├── js/
+│   │   ├── state.js                     # Client state manager
+│   │   ├── ws_client.js                 # WebSocket client
+│   │   ├── intent_router.js             # Gesture-to-screen routing
+│   │   ├── views.js                     # Interactive views, SVG maps & forms
+│   │   └── app.js                       # Touch & gesture event handlers
+│   │
+│   └── staff/                           # Station Staff Control Dashboard
+│       ├── index.html                   # High-density dark operations interface
+│       ├── staff.css                    # Modern Linear/Vercel-inspired dark theme
+│       └── staff.js                     # Live WebSocket client, audio alarm & actions
 │
 └── scripts/
-    └── start_kiosk.bat              # Windows one-click startup
+    └── start_kiosk.bat                  # One-click Windows startup script
 ```
 
 ---
 
-## Known Limitations
+## Testing Real Gesture Recognition End-to-End
 
-| Item | Status |
-|------|--------|
-| Train data | Simulated demo data — NOT live railway information |
-| Station map | Schematic approximation — NOT an official Egmore floor plan |
-| Assistance requests | Stored in-memory only; lost on server restart |
-| Staff notifications | NOT implemented — "acknowledgement" is a client-side timer |
-| PNR lookup | Always returns Pandian Express (demo) |
-| SMS/WhatsApp alerts | Not implemented — UI collects number but does not send |
-| `back` / `cancel` gestures | Not in trained model — use touchscreen |
-| `PLATFORM` gesture | Maps to train board (no dedicated platform screen) |
-| `TICKET` gesture | Shows a static counter-direction notice |
-| Live NTES/CRIS API | Not integrated — requires official API credentials |
+1. Start both services (Python + Node).
+2. Open `http://localhost:5000` in Chrome or Edge.
+3. Verify that the camera preview (bottom-right) displays a **green dot** and your live video feed with hand skeleton overlays.
+4. Perform an Indian Sign Language gesture in front of the camera.
+5. Observe the camera widget border and HUD:
+   - **Yellow** — gesture candidate detected, accumulating confirmation frames.
+   - **Green flash** — gesture accepted with high confidence.
+6. The kiosk automatically navigates to the requested view.
+7. Check the browser console (`[Intent] gesture="..."`) and Python terminal (`Accepted: <word> (xx%)`) for logs.
 
 ---
 
-## Replacing Simulated Data with Real Sources
+## Known Limitations & Production Roadmap
 
-- **Train data:** Replace `backend/data/trains.js` and `backend/services/trainService.js` with calls to a real database or NTES API. All consumers use the service interface — the frontend and routes do not change.
-- **Station layout:** Replace `backend/data/egmore_layout.json` with a surveyed, accurate floor plan. The layout key names (`lift`, `escalator`, etc.) must match the frontend facility buttons.
-- **Assistance dispatch:** Replace the in-memory array in `backend/services/assistanceService.js` with a database write and a real notification mechanism (e.g., WebSocket push to a staff terminal, SMS gateway).
-
----
-
-## Known Issues Requiring On-Machine Testing
-
-- **Camera index:** `CAMERA_INDEX = 0` in `recognition/config.py`. If your webcam appears on a different index (e.g., 1 or 2), change this value.
-- **TensorFlow GPU/CPU:** On some machines TensorFlow may print CUDA warnings. Inference runs on CPU by default — this is acceptable for this application.
-- **MediaPipe version:** If you see import errors, ensure `mediapipe >= 0.10` is installed. Older versions have different API signatures.
-- **Model shape validation:** If the model loads but the shape check fails, the CLASS_NAMES list in `recognition/config.py` may need to be updated to match your actual dataset directories.
-- **MJPEG in Firefox:** Firefox handles `multipart/x-mixed-replace` streams differently. Chrome or Edge is recommended.
+| Component | Status | Production Roadmap |
+|-----------|--------|---------------------|
+| Train data | Simulated | Integrate with official CRIS / NTES live timetable API |
+| Station map | Schematic approximation | Import official surveyed CAD/GIS floor plan of Chennai Egmore |
+| Incident storage | Persistent JSON file store | Migrate to PostgreSQL / MongoDB for multi-station deployment |
+| SMS alerts | India DLT gateway config | Wire active SMS gateway in addition to automated SMTP emails |
+| `back` / `cancel` | Touchscreen only | Extend trained gesture vocabulary to include directional back sign |
 
 ---
 
-*SignMeet — Making railway station services more accessible, one sign at a time.*
+*SignMetro — Making railway station services accessible, one sign at a time.*

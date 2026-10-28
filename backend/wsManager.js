@@ -1,42 +1,34 @@
 /**
  * backend/wsManager.js
  * ---------------------
- * Manages browser-facing WebSocket connections and bridges events
- * from the Python recognition service to all connected frontend clients.
+ * Manages browser-facing WebSocket connections for both:
+ *  - Kiosk Screen (Port 5000)
+ *  - Staff Operations Dashboard (Port 4000)
  *
- * Architecture:
- *   Python service  —WS:8765→  wsManager (Node)  —WS:5000/ws→  Browser(s)
- *
- * The Node backend acts as a relay so the frontend has only one WebSocket
- * connection to manage, and the Python service can restart independently.
+ * Bridges events from:
+ *  - Python ISL recognition service (ws://localhost:8765)
+ *  - Node.js assistance & emergency incident events
  */
 
 "use strict";
 
 const WebSocket = require("ws");
 
-// -------------------------------------------------------------------------
-// Browser-facing WebSocket server (attached to the Express HTTP server)
-// -------------------------------------------------------------------------
-
-let _wss   = null;    // ws.Server instance, set by attach()
-let _pythonWs = null; // current connection to Python service
+let _servers = [];    // ws.Server instances (Kiosk + Staff)
+let _pythonWs = null; // Connection to Python service
 
 /**
- * Attach the WebSocket server to an existing Express http.Server.
- * Call this once from server.js after Express app is created.
+ * Configure event listeners for a WebSocket Server instance.
  */
-function attach(httpServer, pythonWsUrl) {
-  _wss = new WebSocket.Server({ server: httpServer, path: "/ws" });
+function _setupWss(wss, label = "Client") {
+  wss.on("connection", (socket, req) => {
+    console.log(`[WS] ${label} connected from ${req.socket.remoteAddress}`);
 
-  _wss.on("connection", (socket, req) => {
-    console.log(`[WS] Browser connected from ${req.socket.remoteAddress}`);
-
-    // Send current Python service connection status
+    // Send current Python recognition service connection status
     _safeSend(socket, {
-      type:           "SYSTEM_STATUS",
+      type: "SYSTEM_STATUS",
       python_connected: isPythonConnected(),
-      message:        isPythonConnected()
+      message: isPythonConnected()
         ? "Recognition service is connected."
         : "Recognition service is not yet connected. Simulator mode available.",
     });
@@ -45,16 +37,39 @@ function attach(httpServer, pythonWsUrl) {
       try {
         const msg = JSON.parse(raw);
         _handleBrowserMessage(msg);
-      } catch (_) { /* ignore malformed */ }
+      } catch (_) {
+        /* ignore malformed */
+      }
     });
 
     socket.on("close", () => {
-      console.log("[WS] Browser disconnected.");
+      console.log(`[WS] ${label} disconnected.`);
     });
   });
+}
 
-  // Connect to Python service
-  _connectToPython(pythonWsUrl);
+/**
+ * Attach the WebSocket server to Express HTTP server(s).
+ * Accepts a single server or an array of servers.
+ */
+function attach(httpServers, pythonWsUrl) {
+  const servers = Array.isArray(httpServers) ? httpServers : [httpServers];
+
+  servers.forEach((server, idx) => {
+    try {
+      const label = idx === 0 ? "Kiosk / Main" : "Staff Dashboard";
+      const wss = new WebSocket.Server({ server, path: "/ws" });
+      _setupWss(wss, label);
+      _servers.push(wss);
+    } catch (err) {
+      console.warn(`[WS] Failed to attach WebSocket to server #${idx}:`, err.message);
+    }
+  });
+
+  // Connect to Python recognition service
+  if (pythonWsUrl) {
+    _connectToPython(pythonWsUrl);
+  }
 }
 
 // -------------------------------------------------------------------------
@@ -63,7 +78,9 @@ function attach(httpServer, pythonWsUrl) {
 
 function _connectToPython(url) {
   if (_pythonWs) {
-    try { _pythonWs.terminate(); } catch (_) {}
+    try {
+      _pythonWs.terminate();
+    } catch (_) {}
   }
 
   console.log(`[WS] Connecting to Python service at ${url} …`);
@@ -79,7 +96,7 @@ function _connectToPython(url) {
   ws.on("message", (raw) => {
     try {
       const event = JSON.parse(raw);
-      // Forward every event from Python directly to all browsers
+      // Forward gesture recognition event to all connected kiosks and dashboards
       _broadcastToBrowsers(event);
     } catch (_) {}
   });
@@ -88,15 +105,15 @@ function _connectToPython(url) {
     console.log("[WS] Python service disconnected. Reconnecting in 3 s…");
     _pythonWs = null;
     _broadcastToBrowsers({
-      type:             "SYSTEM_STATUS",
+      type: "SYSTEM_STATUS",
       python_connected: false,
-      message:          "Recognition service disconnected. Reconnecting…",
+      message: "Recognition service disconnected. Reconnecting…",
     });
     setTimeout(() => _connectToPython(url), 3000);
   });
 
   ws.on("error", (err) => {
-    // Don't crash — just log; the close handler will retry
+    // Don't crash on connection refused — close handler will retry
     if (err.code !== "ECONNREFUSED") {
       console.log(`[WS] Python WS error: ${err.message}`);
     }
@@ -104,16 +121,17 @@ function _connectToPython(url) {
 }
 
 // -------------------------------------------------------------------------
-// Helpers
+// Helpers & Public API
 // -------------------------------------------------------------------------
 
 function _broadcastToBrowsers(payload) {
-  if (!_wss) return;
   const msg = JSON.stringify(payload);
-  _wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(msg);
-    }
+  _servers.forEach((wss) => {
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(msg);
+      }
+    });
   });
 }
 
@@ -134,4 +152,8 @@ function isPythonConnected() {
   return _pythonWs !== null && _pythonWs.readyState === WebSocket.OPEN;
 }
 
-module.exports = { attach, isPythonConnected };
+module.exports = {
+  attach,
+  isPythonConnected,
+  broadcastToBrowsers: _broadcastToBrowsers,
+};

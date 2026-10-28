@@ -311,9 +311,17 @@
            stroke-dasharray="10 7" stroke-linecap="round"/>`
       : "";
 
-    // Pin (for lost-person map tap)
+    // Pin with centered pointer and pulsing radar target
     const pinEl = pin
-      ? `<text x="${pin[0]}" y="${pin[1]}" font-size="22" text-anchor="middle">📍</text>`
+      ? `<g id="map-pin-target" transform="translate(${pin[0]}, ${pin[1]})" style="pointer-events:none;">
+          <circle cx="0" cy="0" r="14" fill="rgba(239, 68, 68, 0.25)" stroke="#ef4444" stroke-width="2">
+            <animate attributeName="r" values="8;20" dur="1.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.9;0.1" dur="1.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="0" cy="0" r="4" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
+          <path d="M0 -30 C -8 -30 -14 -24 -14 -16 C -14 -7 0 0 0 0 C 0 0 14 -7 14 -16 C 14 -24 8 -30 0 -30 Z" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
+          <circle cx="0" cy="-16" r="5" fill="#ffffff"/>
+        </g>`
       : "";
 
     // Legend
@@ -670,7 +678,7 @@
         <div class="row">
           <button class="btn" data-a="more">I need urgent further help</button>
           <button class="ch" data-a="hide">Quick hide screen</button>
-          <button class="ch" data-a="home">I'm safe – done</button>
+          <button class="ch" data-a="safe">I'm safe – done</button>
         </div>
         ${d.more ? "<p class='er' style='margin-top:8px;'>⚠ Urgent backup requested — SMS update sent to security.</p>" : ""}`;
     },
@@ -692,14 +700,15 @@
             <div style="display:flex; align-items:center; gap:12px;">
               <span style="font-size:26px;">📢</span>
               <div>
-                <b style="color: #3b82f6; font-size:1.1em;">Station Staff & Announcers Notified via SMS</b>
-                <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Missing person details dispatched to Platform Duty Staff (+91 74489 03837)</div>
+                <b style="color: #3b82f6; font-size:1.1em;">Station Staff & Operations Dashboard Notified</b>
+                <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Missing person report logged. When found, staff will email your registered address.</div>
               </div>
             </div>
           </div>
           <p class="ok"><b>Station:</b> Chennai Egmore · <b>Meeting Point:</b> ${v.w || "Platform 1 bench"}</p>
           ${d.request_id ? `<p><small><b>Reference ID:</b> ${d.request_id}</small></p>` : ""}
-          ${trk(["Report Logged", "Staff Notified via SMS", "Announcement Queued"], d.step || 1)}
+          ${v.email ? `<p><small><b>Status update email will be sent to:</b> <b>${v.email}</b></small></p>` : ""}
+          ${trk(["Report Logged", "Staff Notified", "Announcement Queued"], d.step || 1)}
           <div class="card"><b>Public Address Announcement Text:</b>
             <p style="margin-top:6px; font-style:italic;">"${v.n || "—"}, age ${v.a || "—"} yrs, ${v.d || "no description"}: your companion is waiting at ${v.w || "the Platform 1 bench"}. Please go to them."</p>
           </div>
@@ -717,12 +726,18 @@
           <select data-f="w"><option value="">Where will you wait?
             <option>Platform 1 bench<option>Main entrance<option>Enquiry counter<option>Waiting hall<option>Ticket counter</select>
           <label><input type="checkbox" data-f="dk" ${v.dk ? "checked" : ""}> The lost person is deaf / hard of hearing</label>
+          <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--bd);">
+            <small class="mu" style="display:block; margin-bottom:6px;">Your Contact Info (Staff will call & email updates):</small>
+            <input data-f="gn" placeholder="Your name (Parent / Companion)" value="${v.gn || ""}">
+            <input data-f="phone" placeholder="Your phone number for staff calls" value="${v.phone || ""}">
+            <input data-f="email" type="email" placeholder="Your email address (to receive found notification)" value="${v.email || ""}">
+          </div>
         </div>
         <div class="card"><b>Tap the station map where you last saw them</b>
           <div id="mw">${svgMap(null, d.pin)}</div>
         </div></div>
         <p class="er" id="er"></p>
-        <button class="btn" data-a="subp">Send SMS Alert to Staff</button>`;
+        <button class="btn" data-a="subp">Send Alert to Staff</button>`;
     },
 
     losti() {
@@ -734,8 +749,8 @@
             <div style="display:flex; align-items:center; gap:12px;">
               <span style="font-size:26px;">📋</span>
               <div>
-                <b style="color: #10b981; font-size:1.1em;">Lost & Found Desk Notified via SMS</b>
-                <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Report details dispatched to Chennai Egmore Lost Property Office (+91 74489 03837)</div>
+                <b style="color: #10b981; font-size:1.1em;">Lost & Found Desk Notified via Staff Dashboard</b>
+                <div style="font-size:0.92em; margin-top:2px; opacity:0.9;">Report details dispatched to Chennai Egmore Lost Property Office</div>
               </div>
             </div>
           </div>
@@ -743,17 +758,27 @@
             <p><b>Category:</b> ${v.cat || "Item"} · <b>Details:</b> ${[v.c, v.d].filter(Boolean).join(" · ") || "Item details provided"}</p>
             ${v.t ? `<p><b>Train / Coach:</b> ${v.t}</p>` : ""}
             <p><b>Reference Number:</b> <b>${d.request_id || "LP-MS-" + Date.now()}</b></p>
-            ${v.ct ? `<p><small>Confirmation & status SMS will be sent to: <b>${v.ct}</b></small></p>` : ""}
+            ${v.email ? `<p><small>When found, official pickup notice will be emailed to: <b>${v.email}</b></small></p>` : ""}
+            ${v.phone ? `<p><small>Staff contact phone on record: <b>${v.phone}</b></small></p>` : ""}
           </div>
           <button class="btn" data-a="home">Done</button>`;
       }
       return `<h2>${ic("item")} Report Lost Item</h2>
-        <b>Category</b><br>${chips(["Bag", "Phone", "Wallet", "Documents", "Other"], "cat", v.cat)}
-        <input data-f="c" placeholder="Colour / brand (e.g. Black Lenovo backpack)" value="${v.c || ""}">
-        <input data-f="t" placeholder="Train number / coach (optional, e.g. 12637 S3)" value="${v.t || ""}">
-        <input data-f="d" placeholder="Describe the item contents" value="${v.d || ""}">
-        <input data-f="ct" placeholder="Your phone number for SMS updates" value="${v.ct || ""}">
-        <label><input type="checkbox" data-f="cs" ${v.cs ? "checked" : ""}> I consent to being contacted regarding this item</label>
+        <div class="g2"><div>
+          <b>Category</b><br>${chips(["Bag", "Phone", "Wallet", "Documents", "Other"], "cat", v.cat)}
+          <input data-f="c" placeholder="Colour / brand (e.g. Black Lenovo backpack)" value="${v.c || ""}">
+          <input data-f="t" placeholder="Train number / coach (optional, e.g. 12637 S3)" value="${v.t || ""}">
+          <input data-f="d" placeholder="Describe the item contents" value="${v.d || ""}">
+          <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--bd);">
+            <small class="mu" style="display:block; margin-bottom:6px;">Your Contact Info (Staff will email you when found):</small>
+            <input data-f="email" type="email" placeholder="Your email address (for official found notice)" value="${v.email || ""}">
+            <input data-f="phone" placeholder="Your phone number" value="${v.phone || ""}">
+          </div>
+          <label style="margin-top:8px; display:block;"><input type="checkbox" data-f="cs" ${v.cs ? "checked" : ""}> I consent to being contacted regarding this item</label>
+        </div>
+        <div class="card"><b>Tap the station map where you lost it</b>
+          <div id="mw">${svgMap(null, d.pin)}</div>
+        </div></div>
         <p class="er" id="er"></p>
         <button class="btn" data-a="subi">Submit Report & Notify Staff</button>`;
     },
@@ -875,7 +900,7 @@
   }
 
   // Expose everything app.js needs (same interface as before)
-  global.Views  = { render, V, ic, rows, dl, rl };
+  global.Views  = { render, V, ic, rows, dl, rl, svgMap };
   global._TR    = TR;   // expose for app.js action handlers
   global._FAC_MARKERS    = FAC_MARKERS;
   global._FAC_PATHS      = FAC_PATHS;

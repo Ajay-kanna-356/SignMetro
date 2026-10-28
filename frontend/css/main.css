@@ -167,9 +167,13 @@ button, input, select { font: inherit; color: inherit; }
 
 /* ---- Form inputs ---- */
 input[type="text"],
-input:not([type]),
+input[type="email"],
 input[type="tel"],
-select {
+input[type="number"],
+input[type="password"],
+input:not([type]),
+select,
+textarea {
   border: 2px solid var(--bd);
   background: var(--cd);
   border-radius: 14px;

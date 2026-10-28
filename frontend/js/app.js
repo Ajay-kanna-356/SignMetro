@@ -68,7 +68,14 @@
     },
     cx:    ()  => State.setD({ cf: 1 }),
     cxn:   ()  => State.setD({ cf: 0 }),
-    cxy:   ()  => State.done("Request cancelled."),
+    cxy:   async () => {
+      await IntentRouter.cancelAssistance("Cancelled by passenger at kiosk (I'm okay)");
+      State.done("Request cancelled.");
+    },
+    safe:  async () => {
+      await IntentRouter.cancelAssistance("Passenger confirmed safe at kiosk");
+      State.done("Glad you are safe. Security alert closed.");
+    },
     dis:   ()  => State.set({ dis: !State.get().dis }),
     sec:   (v) => {
       State.setD({ sent: v });
@@ -78,7 +85,10 @@
     hide:  ()  => State.home(),
     lp:    ()  => State.go("lostp", { f: {} }),
     li:    ()  => State.go("losti", { f: {} }),
-    arr:   ()  => State.done("Glad you are reunited. The announcement has been stopped."),
+    arr:   async () => {
+      await IntentRouter.cancelAssistance("Passenger reunited with companion at station");
+      State.done("Glad you are reunited. The announcement has been stopped.");
+    },
     cat:   (v) => {
       const d = State.get().d;
       if (!d.f) d.f = {};
@@ -129,9 +139,19 @@
       const er = E("er");
       if (!v.n || !v.a)           { if (er) er.textContent = "Please enter name and age."; return; }
       if (!/^\d{1,3}$/.test(v.a)) { if (er) er.textContent = "Age must be a number."; return; }
+      if (v.email && !/^\S+@\S+\.\S+$/.test(v.email)) {
+        if (er) er.textContent = "Please enter a valid email address.";
+        return;
+      }
       if (!d.pin)                  { if (er) er.textContent = "Tap the map to mark where you last saw them."; return; }
 
-      await IntentRouter.notifyAssistance("lost_person", { ...v, pin: d.pin });
+      await IntentRouter.notifyAssistance("lost_person", {
+        ...v,
+        pin: d.pin,
+        email: v.email,
+        phone: v.phone,
+        gn: v.gn || "Guardian",
+      });
       State.setD({ sent: 1 });
       IntentRouter.track();
     },
@@ -142,13 +162,18 @@
       const v  = d.f || {};
       const er = E("er");
       if (!v.cat) { if (er) er.textContent = "Please choose a category."; return; }
-      if (v.ct && !(/^[6-9]\d{9}$/.test(v.ct) || /^\S+@\S+\.\S+$/.test(v.ct))) {
-        if (er) er.textContent = "Enter a valid phone number or email.";
+      if (v.email && !/^\S+@\S+\.\S+$/.test(v.email)) {
+        if (er) er.textContent = "Please enter a valid email address.";
         return;
       }
-      if (v.ct && !v.cs) { if (er) er.textContent = "Please tick consent to be contacted."; return; }
+      if (!v.cs) { if (er) er.textContent = "Please tick consent to be contacted."; return; }
 
-      await IntentRouter.notifyAssistance("lost_item", v);
+      await IntentRouter.notifyAssistance("lost_item", {
+        ...v,
+        pin: d.pin,
+        email: v.email,
+        phone: v.phone,
+      });
       State.setD({ sent: 1 });
     },
   };
@@ -161,15 +186,30 @@
       A[btn.dataset.a](btn.dataset.v);
     }
 
-    // Map pin tap for lost-person
+    // Map pin tap for lost-person and lost-item
     const mp = e.target.closest("#mp");
-    if (mp && State.get().scr === "lostp" && !State.get().d.sent) {
-      const r = mp.getBoundingClientRect();
-      const pin = [
-        (e.clientX - r.left) * 600 / r.width,
-        (e.clientY - r.top) * 300 / r.height,
-      ];
+    const s = State.get();
+    if (mp && (s.scr === "lostp" || s.scr === "losti") && !s.d.sent) {
+      let pin;
+      if (mp.createSVGPoint && mp.getScreenCTM) {
+        const pt = mp.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        const svgP = pt.matrixTransform(mp.getScreenCTM().inverse());
+        pin = [Math.round(svgP.x), Math.round(svgP.y)];
+      } else {
+        const r = mp.getBoundingClientRect();
+        pin = [
+          Math.round((e.clientX - r.left) * 700 / r.width),
+          Math.round((e.clientY - r.top) * 360 / r.height),
+        ];
+      }
+
       State.setD({ pin });
+      const mw = E("mw");
+      if (mw && Views.svgMap) {
+        mw.innerHTML = Views.svgMap(null, pin);
+      }
     }
   });
 
